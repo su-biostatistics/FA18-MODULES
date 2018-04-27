@@ -1,0 +1,368 @@
+---
+title: "Editing plots"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<div class="list">
+
+<br>
+
+
+## Scatter plots
+
+<br>
+
+#### Basics
+
+
+To generate a scatterplot, you can use the following type of code in RStudio:
+
+```plot(y-value ~ x-value, data = dataset)```
+
+<br>
+
+Conversely, you can also stylize your code like this:
+
+```plot(data$y, data$x)```
+
+<br>
+
+Here is a brief example with some guppy data loaded from the WS2e website.
+
+```{r}
+gups <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter02/chap02e3bGuppyFatherSonAttractiveness.csv"))
+
+plot(gups$sonAttractiveness ~ gups$fatherOrnamentation)
+```
+
+
+Separating the name of a dataset and the column title with `$` allows you to code for that particular column for a dataset. **Remember** to always input your y/vertical/dependent value followed by your x/horizontal/independent value. To make this more memorable, compare this input to the slope of a graph: *rise before run.*
+
+<br>
+
+#### Styles
+
+
+There are also some fun stylistic choices you can do in RStudio with scatterplots. These are not necessary, but there may come a time that you might find it advantageous to use some of these commands. For example:
+
+```
+plot(data$y, data$x, col = "color", pch = 1, xlab = "x-measured", ylab = "y-measured", main = "overarching main title of graph", cex = 1, xlim = c(min, max), ylim = c(min, max))
+```
+
+<br>
+
+The argument col allows you to change the color of your points. RStudio accepts a selected number of color commands, such as "pink", "red", "blue" with some fancier commands such as a "firebrick" red. If you are very creative and particular with your color choices, RStudio also accepts the [HTML code](https://www.w3schools.com/colors/colors_picker.asp) of a color. *Just don't be annoying.*
+
+<br>
+
+The argument of pch allows you to choose the symbol that will be scattered. `pch = 1` codes for a simple open circle which is also the default that appears if you do not include a pch argument. There are various symbols (including characters like "a", "}", and other weird points) that you can use by changing the pch value to anything from 0 to 127. Some useful commands are `pch=0` which is an open square, and `pch=16` which is a filled circle. <sub>`pch = 18` is a filled diamond, which I think looks very pretty.</sub>
+
+<br>
+
+The argument cex modifies the thickness of the points on the graph. Don't get too crazy with this one; it doesn't work like pch where you can input anything up to 127. The default is `cex = 1`, which stands for 100% (base level) thickness. The cex argument acts as a proportion, so changing cex to 0.9 will make your points 90% of the original size, while cex 1.5 will increase the thickness of points by 150%.
+
+<br> 
+
+xlab and ylab are simply the labels for the axes. **Do not forget to include quotation marks around the axis titles, as well as the color name that you input (even if it is an HTML code like #FF69B4).**
+
+xlim and ylim set boundaries for what values you want to be plotted. This can allow you to analyze a specific part of the plot, or possibly exclude outliers. Do not forget to use the combine `c()` function to determine the limits of your plot.
+
+<br>
+
+And here is a brief example using the same guppy data from the first example, but stylized to look aesthetically pleasing.
+
+```{r}
+plot(gups$sonAttractiveness, gups$fatherOrnamentation, pch = 17, cex = 2, col = "#FF69B4", xlab = "Father Ornamentation Score", ylab = "Son Attractiveness Score", xlim = c(0,0.5), ylim = c(0.5, 0.9), main = "Guppy Social Behavior")
+```
+
+Isn't that an improvement from the original boring old plot? 
+
+It is also important to remember that these sort of commands are not only for aesthetical purposes, but it is also helpful to modify the visual properties of your plot to create distinctions that help display data in the clearest and most easy-to-read way possible.
+
+<br>
+
+## Bar plots
+
+<br>
+
+#### Simple bar plot
+
+
+Bar plots are possibly my least favorite plot to produce in RStudio.
+
+<br>
+
+What I've learned to live with is to use the combine function for specific, discrete values.
+
+```barplot(c(label1=value1, label2=value2, label3=value3, etc))```
+
+<br>
+
+You can also utilize loaded data with the barplot command.
+
+```
+barplot(data$variable, names.arg = data$groups, col = "color", xlab = "x value", 
+  ylab = "y value", main = "maintitle")
+  ```
+
+This is very simple, and not too thrilling.
+
+<br>
+
+Here is a brief example using the education spending example from the WS2e website.
+
+```{r}
+edu <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter02/chap02f1_3EducationSpending.csv"))
+
+barplot(edu$spendingPerStudent, names.arg = edu$year, col = "#ff33ff", xlab = "Year", ylab = "Education Spending (per student)", main = "Education Spending")
+```
+
+<br>
+
+#### Advanced bar plots using ggplot2 and reshape2
+
+The R code to create a stylized bar plot generally requires the installation of a package. Luckily, the two packages needed to stylize a bar plot are already preloaded into RStudio! reshape2 is a supplemental package that helps shape your data, while gglopt is an amazing geometric package included in R. [Here](http://www.sthda.com/english/wiki/ggplot2-essentials) is a tutorial site for many things in ggplot2, which will also be broken down for you in this module. ggplot2 consolidates data, geometry, and aesthetics to produce some professional looking plots.
+
+<br>
+
+```
+## Simply you must first load the two packages, known as ggplot2 and reshape2.
+
+library(ggplot2)
+library(reshape2)
+
+## Then you can use this complicated base code to edit the styles of your bar plot.
+
+dataframename = melt(data.frame(group1name=c(values), group2name=c(values), 
+                     xname=c("first group", "second group")),
+          variable.name="name of variables")
+
+ggplot(dataframename, aes(xname, yname, fill=name of variables)) + 
+  geom_bar(position="dodge",stat="identity") + scale_fill_manual(values=c("color1", "color2")) + labs (x = "xlabel", y = "ylabel", fill = "fill/group label", title = "main title label")
+```
+  
+There is a lot to unpack with this code.
+
+<br> 
+
+Here is an example, using hypothetical neurobiological data (slightly based off of the really [cool study](http://science.sciencemag.org/content/359/6376/693.full) conducted by Gandal et al.):
+
+```{r}
+## Load the packages
+library(ggplot2)
+library(reshape2)
+
+## Create vectors and then combine vectors for ease of access
+her1 <- c(32, 40)
+her2 <- c(27, 39)
+Heritability <- c(her1, her2)
+
+## Use ggplot2 code to produce the grouped bar plot
+df = melt(data.frame(BP=her1, SCHZ=her2, 
+                     gene=c("CD2", "CD6")),
+          variable.name="Disorder")
+
+ggplot(df, aes(gene, value, fill=Disorder)) + 
+  geom_bar(position="dodge",stat="identity") + scale_fill_manual(values=c("#0099ff", "#ff0055")) + labs(x = "Genes", y = "Percent Heritability", fill = "Psychiatric Disorder", title = "Genetic Overlap in Psychiatric Disorders")
+
+## We can change a single argument to stack the bar plots! Replace "dodge" with stacked
+df = melt(data.frame(BP=her1, SCHZ=her2, 
+                     gene=c("CD2", "CD6")),
+          variable.name="Disorder")
+
+ggplot(df, aes(gene, value, fill=Disorder)) + 
+  geom_bar(position="stack",stat="identity") + scale_fill_manual(values=c("#e699ff", "#ccffcc")) + labs(x = "Genes", y = "Percent Heritability", fill = "Psychiatric Disorder", title = "Genetic Overlap in Psychiatric Disorders")
+```
+
+<br>
+
+## Histograms
+
+<br>
+
+#### Basics and Styles
+
+A histogram is great for displaying frequency values in counts. It is also a very simple plot to produce in RStudio. Simply use the following function:
+
+<br>
+
+```
+hist(data$counts, main = "main title", 
+  xlab = "label for x", 
+  ylab = "label for y aka frequency")
+  col = "color"
+  las = n
+  breaks = n
+```
+
+<br>
+
+Pretty much the same basic stuff with two new arguments. `las =` gives you an option to stylize the orientation of your labels from 0 to 4. Other values will just give you an error. `breaks =` will give you the option to change the width of the bins (think of them like bars) in this histogram. The command `breaks = n` will decrease bin width with increasing n, while you can conversely use the argument `breaks = c(starting value, seq(min, max, pbin))` where pbin is the proportion corresponding to bin size in context of the original bin. 
+
+<br>
+
+Here is an example using a code from the WS2e website.
+
+```{r}
+salmon <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter02/chap02f2_5SalmonBodySize.csv"))
+
+hist(salmon$massKg, main = "Salmon Mass Frequency", xlab = "Mass (kg)", ylab = "Frequency", col = "#800080", las = 0, breaks = c(1.1, seq(1.2, 3.8, 0.04)))
+```
+
+<br>
+
+#### Stacked histograms using the lattice package
+
+The lattice package is generally used for multivariate data, which is why we must install it to stack multiple histograms on one plot. It is already preloaded into RStudio.
+
+```
+## If you do not install this package, it will not work.
+library(lattice)
+
+histogram(~ counts | group, data = dataset,
+          layout = c(1,n), col = "color", breaks = seq(min,max,by),
+          xlab = "label",
+          ylab = "label but not necessary",
+          main = "title")
+```
+
+<br>
+
+This is very similar to our basic codes, but there are several new commands. We must remember that data should be selected with a tilde and | dividing the counted values and the variable groups. `data =` selects for the dataset we are using. `layout = c(1,n)` chooses for how many plots you are trying to stack on top of each other. For example, if you only have two plots, then you would input `layout = c(1,2)`.
+
+<br>
+
+Here is an example:
+
+```{r}
+## Load data from WS2e
+cichlids <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter12/chap12q09Cichlids.csv"))
+
+## Load the lattice package
+library(lattice)
+
+## Use the lattice plot to create a histogram
+histogram(~ preference | genotype, data = cichlids,
+          layout = c(1,2), col = "#cc99ff", breaks = seq(-0.5, 1, 0.04), main = "Cichlids", ylab = "", xlab = "")
+```
+
+<br>
+
+## Strip charts and box plots
+
+Box plots and strip charts are very simple, easy, and similiar. Their respective codes:
+
+<br>
+
+```
+stripchart(counts ~ category, data = dataset, method = "jitter", vertical = "TRUE")
+```
+
+<br>
+
+`vertical =` is TRUE or FALSE if you want a horizontal plot. `method =` can be "overplot" with points to be plotted over each other, "jitter" has some distribution, or "stack" with plots stacked on each other. You can also edit the amount of jittering with `jitter = ` with values closer to 0 preferred. A strip chart is very much like a scatter plot, so the stylistic modifications you can make are very similar in terms of the points. Use `pch =` to change the point character, `col =` to edit the color, and `cex =` to size the characters.
+
+<br>
+
+```
+boxplot(counts ~ category, data = dataset,
+    col = "color", boxwex = 1, whisklty = 1,
+    outcol = "color", outcex = 1, las = 1,
+    xlab = "label1", ylab = "label2")
+```
+
+<br>
+
+Pretty similiar. `boxwex = ` a proportion of the original box width. `whisktly = ` is a value of 0 to 4 that determines the style of the whisker line. `outcex =` determines the width of the the outlier. `outcol =` is the color of the outlier. `las =` goes from 0 to 4 and determines the orientation. 
+
+<br>
+
+Here are some examples:
+
+```{r}
+pv <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/pelvislength%20(2).csv"))
+
+stripchart(pv$pelvis ~ pv$species, col = "#ff8080", ylab = "Species", xlab = "Pelvis Length", method = "jitter", pch = 18, cex = 2)
+
+boxplot(pv$pelvis ~ pv$species, col = "#cc3399", boxwex = 0.25, whisklty = 1,
+    outcol = "color", outcex = 0.5, las = 1,
+    xlab = "Species", ylab = "Pelvis Length")
+```
+
+
+<br>
+
+
+
+</div>
+</body>
+</html>

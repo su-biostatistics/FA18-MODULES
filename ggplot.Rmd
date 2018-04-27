@@ -1,0 +1,260 @@
+---
+title: "geom plots with ggplot2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+</style>
+<body>
+<br>
+
+<div class = "list">
+
+We have discussed the qplot function in a previous model, which is a basic function that requires little extra work aside from `library(ggplot2)`. The geom plots are much more complicated, however, but can create some very aesthetically pleasing graphs!
+
+An essential thing to remember about the ggplot function is that you must include data + aesthetics + geometry. `ggplot(data, aes())` loads your data, `geom_plottype` dictates the type of plot you will be producing, and other commands you may add will influence the aesthetics. You combine the same inline code inputting `+` between the two codes. Using ggplot as opposed to qplot will allow you to produce more professional looking graphs; this is useful if you are writing an important paper and want to present your data with a method more aesthetically pleasing than base R or Microsoft Excel.
+
+<br>
+
+## Scatterplot
+
+```
+## Scatterplot (geom_smooth adds regression)
+
+ggplot(dataset, aes(x=xvalues, y=yvalues, color=levelsnames)) + 
+  geom_point(shape=number) + scale_color_manual(values=vector) + geom_smooth(method=lm, se = FALSE, fullrange = TRUE)
+```
+
+geom_point codes for a scatterplot, while geom_smooth codes for regression lines. `shape =` is analogous to the pch command in base R, using the same sort of numbering system. `method =` allows you to choose which regression model you want to include, which should be linear model (lm) for the scope of this class; `se = FALSE` gets rid of the ugly standard error bars that pollute your aesthetically pleasing graph (unless you want to include these, but I think you're better off with standard error lines in base R for that). 
+
+<br>
+
+Here is an example using the frequently used [VC data](https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv).
+
+```{r}
+## Load your data
+
+vital <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+## Load ggplot2
+
+library(ggplot2)
+
+## Creat a color vector 
+
+vcol <- c("#ff4d94", "#df80ff")
+
+## Create your plot
+
+ggplot(vital, aes(x=height, y=vc, color=sex)) + 
+  geom_point(shape=18) + scale_color_manual(values=vcol) + geom_smooth(method=lm, se = FALSE, fullrange = TRUE)
+
+```
+
+<br>
+
+
+## Histogram
+
+```
+ggplot(data = dataframe, aes(xvalue)) + geom_histogram(breaks=seq(min, max, by = number), col = colorofoutline, fill = colorofbars)
+```
+
+Creating a histogram is very simple and similar to base R. Choose appropriate limits and breaks; the ggplot function allows you to go more in depth for choosing the aesthetics of your histogram by manipulating the fill and the outline!
+
+<br>
+
+An example:
+
+```{r}
+## Load your data
+
+vital <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+## Load ggplot2
+
+library(ggplot2)
+
+## Choose your x value
+
+ggplot(data = vital, aes(vital$vc)) + geom_histogram(breaks=seq(2000, 6000, by = 100), col = "#ff4d94", fill = "#df80ff")
+```
+
+<br>
+
+
+## Stripchart, boxplot, violin
+
+These are some of my least favorite things to plot.
+
+```
+## Violin Plot
+
+ggplot(data = dataframe, aes(x, y)) + geom_violin()
+
+## Strip Chart
+
+ggplot(data = dataframe, aes(x, y)) + geom_jitter()
+
+## Boxplot
+
+ggplot(data = dataframe, aes(x, y)) + geom_boxplot()
+```
+
+<br>
+
+Here are some examples.
+
+```{r}
+## Load your data
+
+vital <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+## Load ggplot2
+
+library(ggplot2)
+
+## Make a violin plot!
+
+ggplot(data = vital, aes(sex, vc)) + geom_violin()
+
+## Make a strip chart!
+
+ggplot(data = vital, aes(sex, height)) + geom_jitter()
+
+## Make a boxplot!
+
+ggplot(data = vital, aes(sex, vc)) + geom_boxplot() + coord_flip()
+```
+
+Coding these plots is very simplistic; remember that you need your x variable to be categorical. In the box plot example, `coord_flip()` was added to the code to make the plot vertical; some bar plots may look better in the vertical or horizontal, and either is acceptable!
+
+<br>
+
+## Labels and styles
+
+```
+labs(x = "xlabel", y = "ylabel", title = "maintitle", color ="levelsnames")
++
+theme(plot.title = element_text(hjust = 0.5, face = "bold/italic/etc", size = n, color = "color"))
++
+theme(axis.title = element_text(hjust = 0.5, face = "bold/italic/etc", size = n, color = "color"))
++
+theme(axis.text = element_text(hjust = 0.5, face = "bold/italic/etc", size = n, color = "color"))
+```
+
+The `labs` command is, as you expected, the argument for plot labeling with the same mechanics as base R. The `theme` command allows modifications to the styles of the labels. `plot.title` allows you to edit your main title, while `axis.text` and `axis.title` allow you to modify your axes. The specific arguments are pretty self-explanatory; `hjust` allows you to choose a proportion to edit the positioning of your labels (0.5 centers your text). 
+
+You can also create a palette with HTML values of color using the combine function. [Here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) is a composite list of colors in RStudio. This is [a list of HTML colors](https://www.w3schools.com/colors/colors_picker.asp), but not all commands recognize the HTML color code. The vector you create must be the same length as your data, otherwise you will get an error.
+
+<br>
+
+Here are some examples of editing the style of your plot!
+
+```{r}
+## Load your data
+
+vital <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+## Load ggplot2
+
+library(ggplot2)
+
+## Make a violin plot!
+
+ggplot(data = vital, aes(sex, vc)) + geom_violin(col = "lightgreen", fill = "hotpink1") + labs(x = "Sex", y = "Vital Capacity (mL)", title = "BIO-204 Vital Capacities") + theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 20)) +  theme(axis.title = element_text(hjust = 0.5, size = 10, color = "lemonchiffon4", family = "Courier New"))
+
+## Make a strip chart!
+
+ggplot(data = vital, aes(sex, height)) + geom_jitter(shape = 17, col = "magenta")
+
+## Make a boxplot!
+
+ggplot(data = vital, aes(sex, vc)) + geom_boxplot(col = "deeppink", fill = "deeppink3")
+```
+
+<br>
+
+## Facets
+
+Including a facet grid in your ggplot will allow you to plot two or more categories in a level against each other, much like the lattice package, but with all of the pleasing aesthetics of ggplot.
+
+```
+p + facet_grid(.~level, labeller=labeller(level = labelvector)) + theme(strip.text.x = element_text(style), strip.text.y = element_text(style), strip.background = element_rect(color="color", fill="color"))
+```
+
+Note: `p` just indicates whatever ggplot code you were using for your plot without actually writing out a sample plot code; faceting can be done with any sort of plot. `facet_grid` creates your facets, and you can simply input your level into this command. `. ~ level` creates a horizontal grid, but you can also create a vertical grid if that better suits the data you are trying to present.`strip.text` is a generalized command that will allow you to modify the style of the grid labels, and the styles you can edit are the same as in the labels/styles section.
+
+<br>
+
+Here is an example:
+
+```{r}
+## Load ggplot2
+
+library(ggplot2)
+
+## Create a vector for your labels
+labels <- c(female = "FEMALE", male = "MALE")
+
+
+## Create your facet plot
+
+ggplot(vital, aes(x=height, y=vc)) + 
+  geom_point(shape=15, color = "darkturquoise") + scale_color_manual(values=vcol) + facet_grid(. ~ sex, labeller=labeller(sex = labels)) +    theme(strip.text.x = element_text(size=8),
+          strip.background = element_rect(color="darkturquoise", fill="darkorchid1"))
+```
+
+
+
+</div>
+</body>
+</html>

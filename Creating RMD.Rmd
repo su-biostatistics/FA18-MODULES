@@ -1,0 +1,175 @@
+---
+title: "Creating R Markdown Documents"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<div class="list">
+
+<br>
+
+## What is R Markdown?
+
+R Markdown is an interface that consolidates different types of codes into a document that can be published on the web. Different interfaces accept different codes, which is what makes R Markdown very unique; depending on the type of document that is produced, a variety of codes can be consolidated to "knit" data into a webpage document.
+
+The basis of the biostastics coursework is in the R coding language, which performs calculations in R script and notebook documents. When using R Markdown, the **R Markdown Document (RMD)** can recognize R coding, as well as other popular coding languages, such as HTML/CSS, LaTeX, Python, and SQL. Creating an RMD can consolidate many types of code.
+
+When creating an RMD, it can be published to the web via an R affiliated repository known as RPubs. RStudio is programmed to encode into PDF, HTML, and Word documents, but different packages can change the encoding outputs. For example, RMD can be exported for the format of [Github](https://github.com/), which is an online file repository generally for raw data files. 
+
+<br>
+
+## Basic RMD Commands
+
+RMD has a specific language that differs from the more complex commands of other coding languages. Most of the RMD codes are very simplistic and easy to remember.
+
+<br>
+
+#### Font Styles
+
+```
+*Italicized text*
+```
+
+```
+**Bolded text**
+```
+
+```
+# Header styles (decreases with the number of #)
+```
+
+```
+- List head
+  + List content
+  + List content
+  + List content
+```
+
+<br>
+
+#### Including Files
+
+Including images and links are very similar and simple. 
+
+```
+[text](hyperlink)
+```
+
+```
+![optional caption](link to image)
+```
+
+<br>
+
+#### Mathematics and Codes
+
+```
+$inline equation$
+```
+
+```
+$$display an equation with a break$$
+```
+
+To quote R code, you must include {` `} to include inline code, and {``` ```} to display code with a break.
+
+RStudio has an *Insert* button that will set the style of the code chunk you are including, but you can also include it manually by inputting {r} at the beginning of the code chunk. When including R code you can select to show only the code, only the output, or both (which has been done on these modules).
+
+<br>
+
+#### Output Style
+
+```
+title: "title"
+output: html_document
+```
+
+Editing the title of the document will be the main head. Output of the document can be HTML, PDF, or Word with the basic packages preloaded in RStudio.
+
+<br>
+
+## How to Put RMD Together
+
+Ultimately, you must *knit* your RMD, which is available in a "Knit" button with a small image of a ball of yarn. This command is also accessible under the file heading, or command+K. Knitting the document will give you the option to encode the document, which is generally the UTF-8 encoding style.
+
+Saving the file as an RMD will maintain the code, and the output document (HTML/CSS, PDF, Word) will be consolidated in the directory you save your files in. In the Knit preview, there is an option to publish the document on RPubs or RStudio connect.
+
+<br>
+
+## Homework Submission Using RMD
+
+In previous semesters of biostatistics, homework assignments were created through Micrsoft Word, but this turned out to be quite messy, with a lot of students leaving out R code or turning in files that were very disorganized. This semester, a template file for homework submission has been created in which you would have to use R Markdown. <a href="https://www.dropbox.com/home?preview=Homework+Submission+Template.Rmd" target="_blank">Download this RMD file</a> and follow the guidelines on the document in order to produce a concise and organized homework submission. 
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+---
+title: "Biostat Webpage Module Drafts"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+  font-size: 18px;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<div class="list">
+<br>
+
+## The original modules
+
+- [Why do we need statistics?](http://rpubs.com/nmccurtin/wdwnsd)
+<br><br>
+- [Sending meaningful visual messages](http://rpubs.com/nmccurtin/smvmird)
+<br><br>
+- [Describing samples](http://rpubs.com/nmccurtin/dsd)
+<br><br>
+- [Estimating with uncertainty](http://rpubs.com/nmccurtin/ewud)
+<br><br>
+- [Probability](http://rpubs.com/nmccurtin/prdr)
+<br><br>
+- [Binomial data in R](http://rpubs.com/nmccurtin/binomaldatainr)
+<br><br>
+- [Chi-square tests in R](http://rpubs.com/nmccurtin/csrd)
+<br><br>
+- [The normal distribution in R](http://rpubs.com/nmccurtin/tndird)
+<br><br>
+- [t tests in R](http://rpubs.com/nmccurtin/ttinrd)
+<br><br>
+- [Steps to testing a hypothesis](http://rpubs.com/nmccurtin/whwydfasd)
+<br><br>
+- [Comparing two means in R](http://rpubs.com/nmccurtin/ctmrd)
+<br><br>
+- [What happens when your data fail your test's assumptions?](http://rpubs.com/nmccurtin/whwydfasd)
+<br><br>
+- [ANOVA in R](http://rpubs.com/nmccurtin/anrd)
+<br><br>
+- [Correlation in R](http://rpubs.com/nmccurtin/cord)
+<br><br>
+- [Simple linear regression in R](http://rpubs.com/nmccurtin/slrird)
+<br><br>
+
+## Modules written by Nick
+
+- [Homework submission template.RMD](https://raw.githubusercontent.com/nmccurtin/BIOSTATFA2018/master/Homework%20Submission%20Template.Rmd)
+<br><br>
+- [Very basics of R](http://rpubs.com/nmccurtin/bor)
+<br><br>
+- [Basics of RMD](http://rpubs.com/nmccurtin/373890)
+<br><br>
+- [Plot styles](http://rpubs.com/nmccurtin/psd)
+<br><br>
+- [ggplot2: Quick Plotting](http://rpubs.com/nmccurtin/qpgg2)
+<br><br>
+- [ggplot2: ggplotting](http://rpubs.com/nmccurtin/ggplot2)*
+<br><br>
+- [Reference Documents](http://rpubs.com/nmccurtin/ref)*
+<br><br>
+- Lattice module perhaps?
+</div>
+</body>
+</html>

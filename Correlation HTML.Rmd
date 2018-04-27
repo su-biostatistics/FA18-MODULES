@@ -1,0 +1,203 @@
+---
+title: "Correlation in R"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<br>
+
+X! Finally! We've been spending so much time looking at response variables so far, and now we learn the first of the techniques that we'll use for looking at explanatory and response variables together.
+
+<b>You'll see that correlation and regression are both models that compare X and Y, but they look at different things:</b>
+
+<div class="list">
+- Correlation looks at the strength of the relationship (the clustering) between two variables but <u>does not assume</u> that X *causes* the state of Y.
+  - Does X change with Y?
+- Regression uses a linear model to *predict* the value of Y given a particular X. In this case we assume that the value of X causes the value of Y. 
+  - Does the value of X strongly predict the value of Y?
+</div>
+  
+**Correlation tries to answer a few questions:**
+
+<div class="list">
+1. Are two measurement variables related in a consistent, linear form?
+2. If they are related, what is the direction of the relationship?
+3. What is the strength of their relationship?
+</div>
+
+The strength and direction of the relationship is described by a statistic called Pearson's *r*, which estimates the parameter $\rho$ (the Greek letter rho). The value of *r* and $\rho$ ranges from –1 to +1. Pearson's r is a sample estimate like the sample mean or standard deviation. First we calculate *r* and then we test for the significance of *r*. Simple linear correlation tests the null hypothesis H<sub>0</sub>: $\rho \neq 0$; *r* is significant if it's sufficiently different than zero.
+
+Simple linear correlation has some assumptions, as usual:
+
+<div class="list">
+- bivariate random sampling from the population of interest
+- both variables are numerical (measured at the interval or ratio scale)
+- both variables are approximately normally-distributed
+  - or if they aren't, they can be transformed to make them normal
+- the relationship between the two variables is linear
+  - *but* transformation may remove linearity sometimes
+</div>
+  
+## Example of correlation in R
+
+How birds fly (by powered flight or gliding or soaring, etc.) depends on the proportions of the parts of their wing and the size of their body. Consider a study of the ratios of bird wing and tail feathers. [The data downloadable here](https://canvas.instructure.com/courses/1211882/files/57321156/download?wrap=1) show the relationship between the length of the feathers of the wing and the feathers of the tail (in mm) of 12 hummingbirds.
+
+
+```{r}
+# Bring in the data
+
+birds <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/birds.csv"))     ## use your data path
+
+# Make a scatter plot. We set it up like Y ~ X.
+
+plot(tail ~ wing, data = birds, pch = 16, cex = 1.5, col = "blue3",
+         xlab ="Wing feather length (mm)", 
+         ylab = "Tail feather length (mm)")
+
+# pch is plot character 16, which is a filled-in circle
+
+# cex is character expand by 1.5, making it 50% bigger than the default
+```
+
+Okay, so we see that generally what we call the "data ellipse" in the scatter plot has a positive slope, so we'd tentatively say that it ha a positive correlation, but let's calculate it now:
+
+```{r}
+# Do the correlation test and make it an object
+
+birdsCor <- cor.test(birds$tail, birds$wing)
+
+# Inspect the results of the correlation test
+
+birdsCor
+```
+
+
+This output tells us on the last line that *r* = 0.87. It does a *t* test for significance and finds a highly significant *P* = 0.0002. Notice that it has 10 degrees of freedom: df = # of X–Y pairs – 2. It even helpfully gives the 95% CI, which obviously doesn't include 0 because $H_0$ was rejected. 
+
+You can do `cor.test` without making an object, but sometimes we want to use such an object later. If you just typed `cor.test(birds$tail, birds$wing)` into the console, you'd get the same output without making an object.
+
+```{r}
+## If you just wanted the standard error of r, you have to work backward a little:
+
+## get the correlation coefficient and make an object
+
+r <- birdsCor$estimate
+
+# calculate the SE
+
+SE <- sqrt( (1-r^2)/(nrow(birds) - 2) )  ## This was edited from the original module
+
+# SHOW ME WHAT YOU GOT
+
+unname(SE)
+```
+
+Ta da!
+
+## Nonparametric rank correlation using Spearman's *r*
+
+Real life happens a lot and our data aren't normally distributed. [Consider these data](https://canvas.instructure.com/courses/1211882/files/57321337/download?wrap=1) comparing exam scores in chemistry courses and biology courses. Is there a significant relationship between the two?
+
+```{r}
+# Bring in the data
+
+exams <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/exams.csv"))
+
+# What's the plot look like?
+
+plot(bio ~ chem, data = exams, pch = 16, cex = 1.2, col = "red3",
+        xlab = "Chemistry exam score", 
+        ylab = "Biology exam score")
+```
+
+
+Umm...positive? Hard to say because there's so much noise. Let's do the test (here without making the object):
+
+```{r}
+# add the Spearman argument to cor.test
+
+cor.test(exams$bio, exams$chem, method = "spearman")
+```
+
+Here we find that there is not a significant relationship between exam scores ($r_s$ = 0.56, P = 0.096).
+
+By the way, having R do this is a huge improvement over how we did it in the old days. You should all pour one our for your homies who had to sort out all those ranks when they did the work by hand. 
+
+## That's it!
+
+Now you're set to go for correlation. Go to it!
+
+<br>
+
+</body>
+</html>

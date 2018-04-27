@@ -1,0 +1,282 @@
+---
+title: "Binomial data in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<div class="list">
+
+<br>
+
+## Analyzing proportions  
+Proportions give the fraction of the members of a population that possess a particular trait. We express these the same wayas probabilities, from 0.0–1.0.
+
+**The binomial test allows us to determine the probability of an event that has a binomial distribution, meaning that each individual can have one of two possible outcomes** (e.g., success/failure, alive/dead, vertebrate/invertebrate, etc.). We state what we count as a “hit” or a trial with a particular outcome. For example, “What’s the probability that I would have 12 women in a class of 20?” A “hit” here would be observing a woman rather than a guy.
+
+<br>
+
+## The binomial equation  
+
+To calculate binomial probabilities, we use this equation:
+
+Pr[X hits] $=\binom{n}{X}p^{X}(1-p^{n-X})$
+
+Going forward, we'll see that every test as assumptions that have to be true about your data to prevent you from “cheating” the test. The binomial test requires that:
+
+1. the number of trials (*n*) is fixed
+
+2. each trial is independent of every other trial
+
+3. the probability of success (or a “hit”) is the same in every trial 
+
+The hand calculation is a bit of a chore, but the good news is that R has an easy way to calculate the probability of a single event using the function **dbinom()**. It has the general form of 
+
+```
+dbinom(n, size, prob)
+```
+
+where n is the number of hits, size is the number of trials, and prob is the probability of a hit. Note that the in the hand equation *X* is the number of hits but R uses n. Sorry.
+
+<br>
+
+#### An example
+
+I have a class in which 80% of my students are biology majors and 20% are chemistry majors. I wanted to know if I sampled students from this class, what would be the probability of selecting 2 chemistry majors and 3 biology majors if I selecting them in groups of 5. 
+
+I’ll call getting a bio major to be a hit for the purposes of this example. So, in this case, **p** = 0.8, **n** = 5, and **X** = 3, which gives me this:
+
+
+```
+dbinom(3, size = 5, prob = 0.8)
+
+[1] 0.2048
+
+(Note that R console output leads with the [1]. The result follows the [1] the way that your functions follow the >.)
+```
+
+
+So, I would have about a 20.5% chance of selecting 3 bio majors from this group if I sampled them in groups of 5.
+
+What if I wanted to know the probability of getting 3 or more bio majors in groups of 5? This would be
+
+Pr[3 or more] = Pr[3] + Pr[4] + Pr[5]
+
+So, you could do the **dbinom()** function two more times and sum them:
+
+```{r echo=TRUE}
+dbinom(4, size = 5, prob = 0.8)
+
+dbinom(5, size = 5, prob = 0.8)
+```
+
+Pr[3 or more] = 0.21 + 0.41 + 0.33 = 0.95. This means that I’d expect to get 3 or more bio majors 95% of the time with repeated sampling.
+
+<br>
+
+Or you could use this: 
+
+```{r echo=TRUE}
+# calculate the number of hits from 3 to 5
+xsuccesses <- 3:5
+
+# do each calculation
+probx <- dbinom(xsuccesses, size = 5, prob = 0.8)
+
+# make a table from those two values
+probTable <- data.frame(xsuccesses, probx) 
+
+# display the table
+show(probTable )
+```
+
+
+<br>
+
+
+Following these functions, you could also show the outcomes as a histogram:
+
+<br>
+
+
+`barplot(height = probx, names.arg = xsuccesses, space = 0, las = 1, ylab = "Probability", xlab = "Number of biology majors“)`
+
+
+<br>
+
+<img src="https://github.com/nmccurtin/biostatsimages/blob/master/biomaj.jpg?raw=true" style="width:500px;height:424px;">
+
+(I know that we’re using the barplot function to make a histogram, but this works better for binomial data based on the way that we calculated the objects.)
+
+<br>
+
+## Testing hypotheses with the binomial test  
+
+We use the binomial test to calculate the probabilities of a outcome to see if they differ from what we would expect to see by chance. For example:
+
+Over the last 10 years, I have worked with 50 students in my research lab. This year I have 6 but only one is a guy. Is this a fluke? Should I have a more balanced sex distribution in my lab? Looking at my old class rosters, I found that 72% of the students who have taken my classes were women (actual data here, FYI.). So, Pr[guys] = 0.28. Overall, 10 of the 50 students in my lab have been guys.
+
+**Question: Is the sex ratio in my lab (0.20) smaller than the average proportion of guys at Suffolk (0.28)?** Let's use $\alpha$= 0.05 as our rejection level.
+
+**Hypotheses:**
+
+$H_0$: The sex ratio in my lab includes the same or greater proportion of guys than the CAS overall (put another way, Pr[11 or more] ≥ 0.05).
+
+$H_a$: The sex ratio of my lab includes fewer guys than would be expected (or Pr[10 or fewer] < 0.05).
+
+<br>
+
+Adapting the code above:
+
+```{r echo=TRUE}
+# calculate the number of hits from 0 to 10
+xsuccesses <- 0:10
+
+# do each calculation
+probx <- dbinom(xsuccesses, size = 50, prob = 0.28)
+
+# make a table from those two values
+probTable <- data.frame(xsuccesses, probx) 
+
+# display the table
+probTable 
+
+sum(probx)  # Use this function to sum up those probabilities
+```
+
+So, given the proportion of guys at Suffolk <u>I would expect this proportion of guys in my lab (20% or fewer) at least 13% of the time</u>. I fail to reject the null hypothesis because the calculated probability is greater than my confidence level of 0.05. I conclude, then, that my lab’s sex ratio is not significantly different than the sex ratio of students in my classes overall.
+
+<br>
+
+If you don’t need all the individual probabilities for plotting them, there’s an even shorter way to do this test:
+
+```{r}
+binom.test(10, n = 50, p = 0.28, alternative = "less")
+```
+
+<br>
+
+Notice with this approach:
+
+1. This function does a two-tailed test by default, but I added the argument alternative = “less” to specify that I only cared about 10 or fewer, not 10 or fewer AND 40 or more, which would be the two-tailed test. Refer to the help in RStudio for binom.test() for the arguments.
+
+2. This reports my sample probability as 0.2.
+
+3. This also calculates the 95% confidence interval of the sample estimate for me without any extra work.
+
+<br>
+
+## Sampling distribution of a proportion  
+
+Like any estimate, the sample proportion phat is an estimate of the population proportion p. One upshot of this is that we can calculate the 95% confidence interval. You could calculate the standard error of *p* and the 95% confidence interval by hand, but why should you? R to the rescue!
+
+If you used **binom.test()** as before, you got the 95% CI in the output. Sometimes we need to estimate the parametric proportion, and that requires a fix called the Agresti-Coull method, discussed in Whitlock and Schluter.
+
+To do this the easy way in R, you’ll need to download a package to add to base R. You’ll only need to install this package <u>once per computer</u>. 
+
+```
+install.packages("binom", dependencies = TRUE)
+```
+
+With that installed, load the package so that you can use its functions. You’ll need to <u>load the package in each R session</u> if you want to use its commands:
+
+```{r echo=TRUE}
+# Load the binom package
+library(binom) 
+
+# calculate the 95% CI
+binom.confint(10, 50, method = "ac")
+```
+
+<br>
+
+The text refers to the Agresti-Coull method of calculating the 95% CI. The function above does that (using method = “ac”). The 95% CI is different from what we got for my lab example above because it estimates the value of the parametric *p* using the observed data rather than the was we did it above, using 0.28 as the parameter based on previous observations of students in classes.
+
+<br>
+
+If you use it without the method argument, R will return CIs based on 11 different methods. 
+
+```{r echo=TRUE}
+binom.confint(10, 50)
+```
+
+Why on Earth would you want such a pile of CIs? Each of these methods uses a slightly different algorithm and you might choose one over the other based on your data; or you might want to look for a consensus among different methods if your data are messy.
+
+<br>
+
+## Conclusion
+
+
+Calculating direct probabilities using the binomial equation is a powerful tool for testing hypotheses for data that are “either this outcome or that one” binomial in nature. (A “powerful” test means that it has a good ability to distinguish real differences from those expected by chance.) Future tests will allow us to do more with observations of nominal-scale variables that are more than yes/no outcomes.
+
+</div>
+</body>
+</html>

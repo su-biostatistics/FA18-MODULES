@@ -1,0 +1,290 @@
+---
+title: "Comparing two means in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<div class="list">
+
+
+<br>
+
+There are times when we want to compare a sample mean to a parametric value. Perhaps more commonly, we want to compare the means of two samples to see if they are different. We recognize two such tests: paired-sample tests and independent-sample tests.
+
+<br>
+
+## Test for paired or related samples
+
+In these cases we want to compare the change (error variance) of each individual in a group before and after a treatment. Consider if we wanted to test the effects of a drug for lowering cholesterol. A group of people would have their levels measured before treatment and then again afterward. These two observations (usually framed as *before* and *after*) are not independent of one another because they're done on the same person. So, first we pair up the data and then calculate the differences between them (d).
+
+<br>
+
+<center>
+$t\:=\:\frac{\overline{d}-\mu_{d0}}{SE_{\overline{d}}}$, where  $SE_{\overline{d}}\:=\frac{\:s_d}{n}$
+</center>
+
+<br>
+
+The paired *t* test has n – 1 degrees of freedom, where *n* is the number of <u>pairs</u> of observations (or the number of differences).
+
+The paired t test is testing the hypothesis of no difference in a variable between the two observations, but in practice we usually use the <u>one-tailed</u> construction. We want to know if a treatment improved or increased/decreased an attribute, not just made it different than before, and we usually frame it as *after* – *before* differences so that the signs make intuitive sense:
+
+<br>
+
+$H_0$: There is no treatment effect or it decreased the desired outcome ($A \le B$ or $\overline{d}\:\le0$).  
+$H_a$: The treatment increased the desired outcome ($A > B$ or $\overline{d}>0$).
+
+<br>
+
+<p align = "right">(or vice versa if a decreased value is desirable)</p>
+
+<br>
+
+This test has assumptions, and they are mostly like the one-sample *t* test:
+
+- The variable is at the ratio or interval scale.
+- The difference in the observations of the variable are normally-distributed.
+- Each individual is measured twice, before and after the treatment; if not, we compare matched pairs of individuals. Either way, $n_1$ - $n_2$.
+    + This is necessary, say, if the first observation requires that the subject had to be sacrificed after the observation. For example, maybe we needed to weigh the dry weight of the pancreas of rats, requiring surgical removal. The "after" observation would be made on an individual that was as similar as possible (sex, weight, age, etc.) as the individual from the "before" observation.
+- The data are randomly sampled from a population of interest.
+
+<br>
+
+## Using the paired *t* test
+
+Imagine that I am testing the effects of a Very Low Calorie Diet (VLCD) on a sample of young women in high school. My data are:
+
+```
+Before:	117.3	111.4	98.6	104.3	105.4	  100.4	81.7	89.5	78.2  
+After:	83.3	85.9	75.8	82.9	82.3	  77.7	62.7	69.0	63.9
+```
+
+  
+Did the VLCD caused these subjects to lose weight ($\alpha$  = 0.05)?
+  
+  <br>
+$H_0$: The VLCD caused these subjects to gain weight or stay the same ($A \ge  B$ or: $\overline{d}\:\ge0$).  
+$H_a$: The treatment increased the desired outcome ($A < B$ or $\overline{d}<0$).
+<br>
+
+
+There are nine pairs of observations, so there are 9 – 1 = 8 degrees of freedom. The critical value for rejection is $t_{0.05\left(1\right),8}=-1.86$ t. Why negative? Because we set up our differences as A – B differences. This means that if our calculated value for *t* from the data is more extreme than –1.86 we can reject the null hypothesis with *P* < 0.05.
+
+```{r}
+# Make arrays of the observations
+before <- c(117.3, 111.4, 98.6, 104.3, 105.4, 100.4, 81.7, 89.5, 78.2)
+after <- c(83.3, 85.9, 75.8, 82.9, 82.3, 77.7, 62.7, 69.0, 63.9)
+
+# Combine those arrays into a data frame
+vlcd <- data.frame(before, after)
+
+# Calculate the differences between each pair and insert a new column
+vlcd$difference <-(vlcd$after - vlcd$before)   ## This makes lost weight negative numbers
+
+# Inspect the differences to see if they appear to be normally-distributed
+hist(vlcd$difference, right = FALSE, col = "skyblue", main ="", xlab = "After - Before Difference")
+```
+
+<br>
+
+Uh, yeah, I think that looks pretty darn normal, but we'll see formal tests for assessing normality later.
+
+<br>
+
+We can also visualize the differences due to the treatment in a "bump chart" like this.
+
+Reshape your matrix to do it:
+
+```{r}
+# Reshape your data into a new matrix
+vlcd2 = reshape(vlcd, varying = 1:2, direction = "long", 
+     idvar = "vlcd", v.names = "weight", 
+     times = factor(c("before","after"), levels = c("before","after")))
+
+# Make a strips hart from that new matrix
+stripchart(weight ~ time, data = vlcd2, vertical = TRUE, 
+     xlab = "Time", ylab="Body mass (kg)",
+     las = 1, pch = 16, col = "firebrick")
+
+
+# Add the lines to track subjects
+segments(1, vlcd$before, 2, vlcd$after)
+```
+
+
+<br>
+
+Okay, so let's do the test already:  
+
+```{r echo=TRUE}
+# Either one of these will give you the same result:
+
+t.test(vlcd$after, vlcd$before, paired = TRUE, alternative = "l")   ## if you didn't calculate a difference
+
+t.test(vlcd$difference, alternative = "l")  ## if you did
+```
+
+
+<br>
+ 
+Note that if we didn't include the argument **alternative = "less"** then we'd get the two-tailed result. 
+
+So, we have a calculated t of -12.74 which throws us farther into the area of rejection than our $t_{0.05\left(1\right),8}=-1.86$. We can conclude that the VLCD treatment cause these subjects to lose weight (*P* < 0.001). 
+
+<br>
+
+## Two-sample *t* test (for independent samples)
+
+The two-sample t test assesses the null hypothesis that two samples come from the same population, or
+
+<br>
+
+H<sub>0</sub>: $\mu_1=\mu_2$ (or $\overline{Y_1}=\overline{Y_2}$)  
+H<sub>a</sub>: $\mu_1\ne\mu_2$ (or $\overline{Y_1}\ne\overline{Y_2}$)  
+
+<br>
+
+The test is $t=\frac{\left(\overline{Y}_1-\overline{Y}_2\right)-\left(\mu_1-\mu_2\right)}{SE_{\overline{Y}_1-\overline{Y}_2}}$. We assume that the term $\mu_1-\mu_2$ is equal to zero if we are testing the null hypothesis that they're equal. In the rare case that you wanted to test whether the two samples had a difference of 8 or something, then you'd have a 8 in that part of the equation. The denominator is a value called the "pooled variance," which is a drag to calculate by hand but R will knock it out like that's it's job. Which it is.
+
+<br>
+
+This test's assumptions are:  
+
+- Random sampling from two populations of interest
+- The measured variable is approximately normally-distributed and continuous and at the interval or ratio scale.
+    + If the variable is discrete, it must be assume a large range of values.
+- The variance (and SD) of the numerical variable is the same for both populations.
+The degrees of freedom are calculated as df = *n*<sub>1</sub> – *n*<sub>2</sub> – 2.
+
+<br>
+
+## Using the two sample *t* test
+
+I have some data comparing the length of the pelvis in 5 male macaques and 9 male gibbons. Do these species have the same pelvis length?
+
+H<sub>0</sub>: Macaque = Gibbon ($\mu_1=\mu_2$).  
+H<sub>a</sub>: Macaque ≠ Gibbon ($\mu_1\ne\mu_2$).
+
+[Download](https://www.dropbox.com/s/o7tix1tpvw3t9dv/pelvislength.csv?dl=0) the CSV file.
+
+```{r echo=TRUE}
+# Bring in the file from your drive. Insert the file path inside the quotes.
+
+pelvis <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/pelvislength%20(2).csv"))
+
+# Use the package called "lattice" to do a stacked histogram. 
+# Click it to activate it in the "Packages" pane or use this function.
+
+library(lattice)
+
+histogram( ~ pelvis | species, data = pelvis, layout = c(1,2), col = "orange", breaks = seq(7, 15, by = 1), xlab = "Pelvis length (mm)")
+```
+
+
+<br>
+
+
+```{r echo=TRUE}
+# Do the test
+
+t.test(pelvis ~ species, data = pelvis, var.equal = TRUE)
+```
+
+
+So, it's clear that we can reject the null hypothesis that these means come from the same statistical population, (*t* = 8.04, df = 12, *P* < 0.001).
+
+<br> 
+
+But go back to the histograms. Do they look like they have the same variance? Let's use a test to see if they are. There are several choices to pick from in R. We'll use the variance ratio test (*F* test) to test the null hypothesis that the ratio of the variances is = 1.
+
+```{r echo=TRUE}
+# Do the test
+
+t.test(pelvis ~ species, data = pelvis, var.equal = TRUE)
+```
+
+
+So, here we conclude that the variances are not different from one another (or that the ratio between them is not different from 1), *P* = 0.88. Notice that the 95% CI includes 1.
+
+Because we failed to reject the null hypothesis, we could have added the function var.equal = TRUE and R would have calculated the degrees of freedom using the "usual" pooled variance. The two-sample t test runs Welch's approximation by default. Frankly it's always safer to use that. In this example there was no difference between the two methods.
+
+<br>
+
+## Conclusion
+
+That's all for now. In the next module I'll introduce some nonparametric methods for working with data that fail to conform to a test's assumptions.
+
+<br>
+
+</div>
+</body>
+</html>

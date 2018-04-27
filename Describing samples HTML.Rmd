@@ -1,0 +1,163 @@
+---
+title: "Describing samples"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<br>
+
+<div class = "list">
+
+
+The content of this part isn't difficult, but it's a necessary foundation for estimation and inference about data. For numerical data, we want to be able to describe the <u>central tendency</u> and <u>dispersion</u> of a sample. Categorical data are described by <u>proportions</u> of outcomes. 
+
+The **arithmetic mean** is the familiar "average" or "center of gravity" of a sample, or a typical value that we might expect from repeated sampling.
+
+In R, the command to calculate the mean is simple: it's
+
+```
+mean(x)
+```
+
+where the argument <u>x refers to a bunch of numerical observations that you've defined as an object.</u>
+
+The **standard deviation** describes the spread of a distribution—how different, in general, are different observations from the mean? The SD is derived from another measure of dispersion called the **variance**, but we prefer the SD because (for reasons of arithmetic) it keeps the same units as our observations.
+
+The SD from raw data is equally easy in R:
+
+```
+sd(x)
+```
+
+
+The median and interquartile range are other descriptors of numerical data. The **median** is a measure of central tendency, but it's the "50% line" or middle value in your data when they are range from low to high. It shows you where half of your data are above and below the middle value. (When you have an even sample size, take the mean of the two middle numbers. The **interquartile range** is the "middle 50%"" of your data.
+
+As you might predict, in R the median is simply
+
+```
+median(x)
+```
+
+If you need the 25%, 50% (median), and 75% values, use the function
+
+```
+quantile(x)
+```
+
+and R will report back all of them.
+
+Boxplots visually demonstrate these values. Below, $Y_i$ means "any given observation." $Y_1$ is 58 in., $Y_2$ is 59 in., etc.
+
+<img src="https://github.com/nmccurtin/biostatsimages/blob/master/IQR%20(1).jpg?raw=true">
+
+Last, the sample proportion shows the number of counts of a categorical outcome. In my fall 2016 biostats class there were 25 women out of 32, which is a sample proportion of 0.78. The proportion goes from 0 to 1.0, meaning "never" to "always." Why don't we use percents? I think that it was to make the math simpler when we apply proportions to other sample sizes.
+
+You could just *divide* this, but if you were working with a huge table, the function
+
+```
+prop.table(x)
+```
+
+works well to report proportions. Let the software count for you.
+
+<br>
+
+### But wait!
+
+These approaches work like this when your are working from raw data. If your data are represented in a frequency distribution table, you <u>need to account for each observation</u>.
+
+For example, if you had this frequency distribution of body heights:
+
+<br>
+
+Height |	Freq.
+------|------
+61 |	1
+62 |	4
+63 |	5
+65 |	8
+66 |	4
+68 |	2
+70 |	1
+
+<br>
+
+<u>**The mean is not 65.0**</u>. That's what you'd get if you added the height observations and divided by 7.
+
+The problem is that <u>you have 25 observations</u>. Your raw data would be this: 61, 62, 62, 62, 62, 63, 63, 63, 63, 63, 65...skipping a few...70. The mean is 1614/25 = <u>64.56</u>.
+
+Don't mess that one up. That's rookie mistake.
+
+</div>
+</body>
+</html>
+
+<br>

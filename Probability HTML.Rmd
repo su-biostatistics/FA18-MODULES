@@ -1,0 +1,157 @@
+---
+title: "Probability"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<div class="list">
+
+<br>
+
+
+**Probability** is the backbone of data analysis because random chance has a great effect on sampling. The **probability of an event** is based on the idea of the random (unbiased) trial, in which two or more outcomes are possible but can't be predicted. In order to describe probability of an event, we need to define:
+
+1. the sample space: the set of all possible outcomes
+2. event: any potential subset of the event space
+The event's probability, then, is the proportion of times a specified event would occur after repeated random trials. Proportions are expressed as falling between 0.0 (never) and 1.0 (always). We express this in writing as  Pr[A] = "the probability of A".
+
+<br>
+
+## Probability distributions
+
+The probability distribution of a random trial is the probability of each mutually-exclusive outcome of a random trial. **Mutually-exclusive events** are events that can't happen together, like flipping a head *and* a tail on a coin on one toss, so Pr[A and B] = 0. The sum of all proportions of events must sum to 1.0 in a probability distribution.
+
+**Discrete probability distributions** are described with histograms (not bar graphs: though discrete, these distributions are numerical).
+
+**Continuous probability distributions** are described with a curve whose height is the probability density. These are not as "clean" as discrete probabilities because it covers an infinite number of outcomes—the probability of each is infinitesimally small. However, we can talk about the probability of observing an outcome in a particular range. As the bin sizes get smaller the tops of the bars of a discrete probability distribution can begin to approximate a bell-shaped curve.
+
+Either this or that: adding probabilities
+
+We often want to know the probability of one of two mutually-exclusive events. The **addition rule** combines these two outcomes: 
+
+Pr[A or B] = Pr[A] + Pr[B]
+
+For example, on a six-sided die, the probability of rolling any given number would be one out of six, or 0.167. So, the probability of rolling a 2 or a 4 on a six-sided die would be this:
+
+Pr [2 or 4] = Pr [2] + Pr[4] = 0.167 + 0.167 = 0.333
+
+This works fine for mutually-exclusive events, but in the case of nom-mutually-exclusive events we need to use the general addition rule, which looks like this:
+
+Pr[A or B] = Pr[A] + Pr[B] – Pr[A and B]
+
+Why bother? This can happen:
+
+What’s the probability of rolling an even number OR a number more than 4 with an eight-sided die?
+
+<span style="color:blue">Pr[>4] = 4/8</span> and <span style="color:red">Pr[2, 4, 6, or 8] = 4/8</span>
+
+If we just added these together, then we'd get a probability of 1.0, saying that we would always roll an even number or one > 4. (What about 1 and 3??)
+
+So we use the general addition rule:  
+Pr[A or B] = Pr[A] + Pr[B] - Pr[A and B]   
+Pr[>4 or even] = <span style="color:blue">(Pr[5] + Pr[6] + Pr[7] + Pr[8])</span> + <span style="color:red">(Pr[2] + Pr[4] + Pr[6] + Pr[8])</span> - <span style="color:pink">(Pr [6] + Pr[8])</span>  
+= <span style="color:blue">4/8</span> + <span style="color:red">4/8</span> - <span style="color:pink">(2/8)</span> = 6/8 or 0.75
+
+Or consider this example of the general addition rule using animal survey collections:
+
+<img src="https://github.com/nmccurtin/biostatsimages/blob/master/Screen%20Shot%202017-09-21%20at%2011.16.51%20AM.png?raw=true">
+
+<br>
+
+## This and that: the multiplication rule
+
+Sometimes events are independent, meaning that the outcome of one event doesn’t affect chance of the other event. For this, we use the multiplication rule:
+
+Pr[A and B] = Pr[A] x Pr[B]
+
+For example, what’s the chance of giving birth to a girl *then* a boy?
+This implies the subset of events with a girl and a boy
+Pr[A and B] = Pr[A] x Pr[B]  
+Pr[girl then boy] = Pr[girl] x Pr[boy]  
+Pr[girl] = 0.48 Pr[boy] = 0.52  
+Pr[girl then boy] = 0.48 x 0.52 = 0.2496 or ~25%
+
+Why not 0.5 for each probability? I'm just using a probability suggested by the textbook.
+
+<br>
+
+## Last things
+
+The chapter includes information about probability trees, which are helpful for the cases when we want to show the probabilities of all the possible outcomes of events visually.
+
+We'll talk about conditional probability when I see you in our F2F meeting.
+
+<br>
+
+</div>
+</body>
+</html>

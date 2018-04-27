@@ -1,0 +1,157 @@
+---
+title: "t tests in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+
+<div class="list">
+<br>
+
+We know that when very large sample sizes are observed that they tend to be distributed normally (with a normal distribution). The predictability of the proportions of the normal distribution make the *Z*-test a powerful one. (Again, a test with statistical "power" means that the algorithm has a good ability to discern differences or relationships between groups.) The problem with the *Z*-test is what it requires to work, especially in its requirement that we know the parametric standard deviation (\sigma) for it to work. 
+
+<br>
+
+## The *t* test
+
+In 1908 a statistician working for the Guinness Brewing Company discovered a test for small sample sizes that were approximately normally distributed. This test and distribution has come to be called Student's *t*. Its algorithm is
+
+<br>
+
+<center>$t=\frac{\overline{Y}-\mu}{s}$</center>
+
+<br>
+
+It's got the basic layout of *Z*—it compares an observation or sample mean to a parametric or comparison mean divided by the dispersion of the population—but here the parametric \sigma  is estimated by the sample's standard deviation. This has the result of giving a normalish-looking distribution, but the proportions are a little different in the tails and the shape of the distribution changes as the sample size increases. At sufficiently large samples (*n* > 1000), the distribution of t very closely approximates the shape of a normal distribution.
+
+Another difference with the *t* distribution compared to *Z* is that we have to keep track of the degrees of freedom. Here for a one-sample *t* test, df = *n* -1. 
+
+<br>
+
+This test has assumptions:
+
+- Data are randomly sampled from a single population
+- The variable is either interval or ratio-scale data. It may be continuous or discrete if it can attain a large range of values.
+- The data are approximately normal—not skewed.
+
+<br>
+
+## Using the *t* test
+
+Here is an example: Imagine I observed a sample of intertidal crabs, and I want to know if their internal temperature at low tide is different than the temperature of the air at that time (24.3 °C). Let $\alpha$  = 0.05.
+
+<br>
+
+$H_0$: The crabs' temperature is the same as the air ($\overline{Y}$  = 23.3 °C).  
+$H_a$: The crabs temperature is different than the air ($\overline{Y}$ ≠ 23.3 °C). 
+
+```{r}
+# Copy this to make an array of the data
+crabs <- c(25.8, 24.6, 26.1, 22.9, 25.1, 27.3, 24.0, 24.5, 23.9, 26.2, 24.3, 24.6, 23.3, 25.5, 28.1, 24.8, 23.5, 26.3, 25.4, 25.5, 23.9, 27.0, 24.8, 22.9, 25.4)
+
+
+# Do the test and specify that the population mean is 24.3
+t.test(crabs, mu = 24.3)
+```
+
+So, we calculated a value of *t*  = 2.7128 at 24 degrees of freedom. The two-tailed critical value at df = 24 (from Statistical Table C) is 2.06. Because our calculated value for *t* exceeds this critical value, we can reject the null hypothesis. The output shows that *P* = 0.01215.
+
+Notice that the output includes the 95% CI for the population mean by default, and that 24.3 is not in that range.
+
+<br>
+
+So our sample mean = 25.028 °C. What if we wanted to know if the crabs were *hotter* than the air temperature, not just different? Then we'd do this:
+
+$H_0$: The crabs' temperature is lower than or the same as the air ($\overline{Y}\le$ 23.3 °C).<br>
+$H_a$: The crabs temperature is different than the air ($\overline{Y} >$ 23.3 °C). 
+
+```{r}
+# Use the crab vector from before
+
+# Do the test and specify that the population mean is 24.3
+# Also specify the tailedness with the argument alternative = "greater" or "less". You can specify just the initial letter.
+
+t.test(crabs, mu = 24.3, alternative = "g")
+```
+
+Why so much more significant? We've put our whole area of rejection into the right tail instead of splitting it up between the two. The critical value from the table is way lower, too: $t_{\alpha\left(1\right),\:24} = 1.71$.
+
+<br>
+
+## That's it!
+
+Next time we'll work through the process for looking for differences between two sample means.
+
+<br>
+</div>
+</body>
+</html>

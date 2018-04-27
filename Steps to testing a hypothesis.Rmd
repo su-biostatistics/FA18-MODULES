@@ -1,0 +1,111 @@
+---
+title: "Steps to testing a hypothesis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+all {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<div class="all">
+<br>
+
+**Answering a biological question with statistics has a few steps that should be followed to communicate your result clearly and completely to your audience.**
+
+<br>
+
+This example uses a dataset about vital capacity of the lungs in college students. 
+
+<br>
+
+<div class="list">
+**Step in process** |	**Example**
+--------------------------------- | ---------------------------------
+<br>1. State the question to be answered as clearly as possible. **This may be done before or after gathering data.**<br> |	Do male and female students have equivalent lung capacities?
+<br>2. **Characterize the sample and the variables**, including their scale of measurement and a test for normality. Include graphs or tables as appropriate.<br>|Lung capacity is measured at the ratio scale. Sex is measured as two nominal-scale groups.<br><br><img src="https://github.com/nmccurtin/biostatsimages/blob/master/VCplot.jpeg?raw=true">
+<br>3. **Decide on a statistical test and tailedness.** This is based on the sampling distribution and the characteristics of your variable(s).<br> |	I first used a Shapiro-Wilk test to see if the log-transformed lung capacities are normally-distributed and found that they were (W = 0.99, P = 0.09). I'll compare these means with a two-sample t test using Welch's method (which doesn't assume equality of variances). This is a two-tailed test as the question is stated because I was looking for "different."
+<br>4. **State the null and alternative hypotheses** to be tested <br><br> - $H_0$: the hypothesis of "no difference" between the sample and random chance. <br> - Ha: phrased to be the only other choice if $H_0$ is rejected<br> | $H_0$: Male and female students have equivalent lung capacities ($\mu_{male}=\mu_{female}$).<br><br> $H_a$: Male and female lung capacities are different ($\mu_{male}\ne\mu_{female}$). 
+<br>5. **Determine the appropriate confidence level** ($\alpha$) at or below which $H_0$ would be rejected.<br> |	Let alpha α  = 0.05.
+<br>6. **Calculate the test** with the function in R. I'm showing the output here—that's okay for homework—but I wouldn't include this in the paper.<br>	| `t.test(lungs$lnvc ~ lungs$sex)` <br><br> Welch Two Sample t-test <br><br> data: `lungs$lnvc by lungs$sex` t = -17.144, df = 108.87, p-value < 2.2e-16 alternative hypothesis: true difference in means is not equal to 0 95 percent confidence interval: -0.4062970 -0.3220898 <br> sample estimates: <br> mean in group female mean in group male <br> 8.055377 8.419570
+<br>7. **Make a decision about $H_{0}$** by comparing the test statistic with the predetermined confidence level.<br>	| The reported p-value is far smaller than 0.05, so I reject the null hypothesis.
+<br>8. **Report your conclusion in words relevant to the original question, and include the test statistic, degrees of freedom (if applicable), and *P*-value** (level of significance) whether $H_0$ is rejected or not.<br>	| Men and women have different log-transformed vital capacities (*t* = -17.144, df = 109, *P* < 0.001).<br><sub>Note that even though *P* is wayyyy lower than 0.05, I wouldn't recommend reporting a *P*-value more extreme than "*P* < 0.001."</sub>
+</div>
+
+<br>
+
+This actually isn't the *best* example because, as we'll see, it's not sex that determine VC but body size. As you'd expect, most of my male students were taller than my female students, so they have bigger VCs. Women and men with the same height are not significantly different from each other. But we'll wait to cover this until we do regression.
+
+<br> 
+
+
+</div>
+</body>
+</html>

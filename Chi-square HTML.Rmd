@@ -1,0 +1,175 @@
+---
+title: "Chi-square tests in R"
+author: " "
+date: " "
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<div class="list">
+
+<br>
+
+Chi-square tests are used to compare relationships between variables measured at the nominal scale. These tests look for differences among frequencies or departures from expected frequencies.
+
+The test algorithm is probably familiar for people who have taken genetics:
+<br><br><center>
+$\chi^2=\sum\frac{\left(observed\:-expected\right)^2}{expected}$
+</center><br>
+This test has to include its degrees of freedom, which is 
+DF = # categories – 1 – the number of parameters estimated by the data.
+
+<br>
+
+The assumptions of this test are:
+
+1. Observations taken at the nominal scale. Categories of the nominal scale are represented as mutually exclusive.
+2. Observations are independent of one another.
+3. No category has an expected frequency of less than 1, or if there are lots of categories, not more than 20% have an expected frequency < 5.
+
+<br>
+
+## Goodness-of-fit
+
+We can use chi-square to see if a set of observations fit our expectations.
+
+Let's say that we have a bunch of flowers, and we think that flower petal coloration is determined by a simple Mendelian gene. If this were true, then we would expect a color ratio of 3 yellow to 1 white. We observed 100 flowers and found 84 yellow and 16 white. Can we determine if these follow expected Mendelian ratios at a confidence level of 0.05?
+
+So, we need to determine what our expected frequencies are. Given 100 flowers with a 3:1 ratio, we would expect 75 yellow and 25 white.
+
+$H_0$: Ratio of yellow to white is 3 : 1.  
+$H_a$: Ratio of yellow to white is not 3 : 1.
+
+In R we use the **chisq.test()** function:
+
+```{r}
+# make a vector of expected values
+obs <- c(84, 16)  
+
+# make a vector of expected *proportions* 
+exp <- c(0.75, 0.25) 
+
+# do the test
+chisq.test(x = obs, p = exp)
+```
+
+This value chi-square results in a P-value of 0.04, so we would reject the null hypothesis that the flowers have a 3 : 1 color ratio. Based on this, we conclude that the gene that controls flower color is not a Mendelian one.
+
+<br>
+
+## Goodness-of-association
+
+Another use of chi-square is to see if disproportionate relationships exist between a category variable and a grouping variable. Consider this example that companies severity of lesions with age. For these data,
+
+$H_0$: There is an relationship between age and lesion severity.
+
+$H_a$: Lesion severity depends on age.
+
+[Download the raw data file here.](https://www.dropbox.com/s/q60s4oo9ijwejxk/lesions.csv?dl=0)
+
+```{r}
+# bring in the data. Fill in with your file path.
+lesions <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/lesions.csv"))
+
+# make grouping variables
+lesions$age <- factor(lesions$age, 
+ levels = c("30-39", "40-49", "50-59", "60-69"))
+
+# make those data a table
+lesionsTable <- table(lesions$age, lesions$severity)
+
+# and add the marginal totals on the table
+addmargins(lesionsTable)
+
+# If you want a mosaic plot of these data
+mosaicplot( t(lesionsTable), col = c("red2", "yellow", "green3", "blue"), 
+ cex.axis = 1, main = "", las = 2,
+ sub = "Lesion severity", ylab = "Age")
+
+# do the test of association
+chisq.test(lesions$age, lesions$severity, correct = FALSE)
+```
+
+<br>
+
+In this case, the P-value of 0.62 is way higher than the usual confidence level of 0.05, so we fail to reject the null hypothesis.
+
+<br>
+
+## Conclusion
+
+There are other applications of the chi-square test, but these two will get you pretty far. Soon we'll get to working with data that are ratio-level in information.  
+
+<br> 
+
+</div>
+</body>
+</html>

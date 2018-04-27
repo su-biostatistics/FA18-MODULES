@@ -1,0 +1,199 @@
+---
+title: "Quick plotting with ggplot2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<div class="list">
+<br>
+
+
+**ggplot2** is a package in RStudio that focuses on <u>aesthetics, geometry, and data</u>. The plots produced using this package are much more pleasing to look at, compared to the basics you can make in RStudio. However, the commands are quite different, as you can remember from using the package in the plot styles module to create stacked and grouped bar plots. This information-dense [PDF](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) breaks down ggplot2 for future reference, but in this module I will unpack this tool a little more in depth, so that a beginner in RStudio can use it without the assumption that the reader already has sound understanding of the inner workings of R codes.
+
+<br>
+
+ggplot2 has two potential functions: *ggplot* and *qplot*. In this module, we will analyse qplot, which is shorthand for quickplot and is analogous to the base R plotting function [using this data set](https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv).
+
+<br>
+
+## Creating a scatterplot
+
+Like the plot function in base R codes for a scatterplot, the qplot function in ggplot2 without any modification codes for a scatterplot.
+
+<br>
+
+```
+qplot(xcoord, ycoord, data = dataframe, color = "color"/subgroup)
+```
+
+<br>
+
+Here is an example!
+
+```{r}
+## Read data and set the library to ggplot2
+
+voc <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+library(ggplot2)
+
+## Generate your plot
+
+qplot(height, vc, data = voc, color = sex)
+
+## You can also add a geom = c( function to create regression.
+
+qplot(height, vc, data = voc, color = sex, geom = c("point", "smooth"))
+
+## I think it's cool how you can make the points the names of each datum using the geom function!
+
+qplot(height, vc, data = voc, color = sex, label = name, geom = c("point", "text"))
+```
+
+<br>
+
+Including a "geom" does some sort of statistical summary of your data, as we can see in this plot is a regression line with standard error bars. The line on its own is good enough, although a lot of R programmers like to show off the standard error bars. (I personally think it's )
+
+<br>
+
+## Creating a histogram
+
+This is simple, like in base R.
+
+<br>
+
+```
+qplot(value, data = dataframe, geom = "histogram")
+```
+
+<br>
+
+```{r}
+## Read data and set the library to ggplot2
+
+voc <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+library(ggplot2)
+
+## Generate your plot, using the "geom" histogram
+
+qplot(height, data = voc, geom = "histogram")
+```
+
+<br>
+
+## Boxplots, stripcharts, and violin plots
+
+These three plots are very similar because they are separated with an axis of categorical values and an axis of numerical values; their R code is similar when using the ggplot2 quick plot.
+
+<br>
+
+```{r}
+## Read data and set library to ggplot2
+voc <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+library(ggplot2)
+
+## Generate boxplot by setting your geom to boxplot
+
+qplot(sex, height, data = voc, geom = "boxplot")
+
+## Generate strip chart by setting your geom to jitter, stackdir and binaxis are used to create a jitter
+
+qplot(sex, height, data = voc, geom = "jitter", stackdir = "center", binaxis = "y")
+
+## Generate a violin plot by setting your geom to violin
+
+qplot(sex, height, data = voc, geom = "violin")
+```
+
+<br>
+
+## Adding labels and colors
+
+This step is quite simple. The arguments are:
+
+```
+xlab = "label", ylab = "label", main = "maintitle"
+```
+
+<br>
+
+Colors are also simple, as touched on earlier in this module. Using the quickplot, you can either separate automatic colors by setting the color to the category separating the values, or you can choose an overarching color.
+
+<br>
+
+```
+col = variable
+```
+
+```
+col = "blue"
+```
+
+<br>
+
+Let's consolidate these features into one of our previous plots!
+
+```{r}
+## Read data and set library to ggplot2
+voc <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+library(ggplot2)
+
+## Generate boxplot by setting your geom to boxplot
+
+qplot(sex, height, data = voc, geom = "boxplot", col = sex, fill = sex, xlab = "Sex of Participant", ylab = "Vital Capacity (mL)", main = "Vital Capacity and Sex of BIO-203 Students")
+```
+
+<br>
+
+The `col = ` function acts as the outline for histograms, boxplots, and violin plots. The `fill =` function changes the actual color of the bars.
+
+<br>
+
+That's all for now!
+
+</div>
+</body>
+</html>

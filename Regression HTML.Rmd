@@ -1,0 +1,311 @@
+---
+title: "Simple linear regression in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<div class="list">
+
+<br>
+
+
+Simple linear regression predicts a response variable's value (Y) based on the value of an explanatory variable (X). It's "simple" because it's only looking at a single explanatory variable; multivariate linear models also exist. A strong response will result in a scatter plot with a higher slope than one with a weaker (or nonsignificant) relationship. Unlike correlation, regression assumes a cause-and-effect relationship between X and Y.
+
+Regression makes a linear model to find the line that describes the relationship between the two variables. Whether by hand or with R, the method of least squares finds the equation for that line. The "least squares" method minimizes the residuals between each point and the best-fit line.
+
+The equation for this line is
+
+<br>
+
+<center>$Y\:=\:a\:+\:bX$</center>
+
+<br>
+
+where *X* is the explanatory variable, *Y* is the response variable, *b* is the slope or rate of change, and *a* is the Y-intercept. We will be solving for the slope and the intercept.
+
+There are assumptions to regression, as you'd expect by now. These are assumptions about the response variable, as usual:
+
+- at each $X_i$, there is a population of values of Y whose mean is on the "true" regression line
+- at each $X_i$, the population of Ys is normal
+- at each $X_i$, the variance of Y is the same
+- at each $X_i$, the observations of Y are a random sample of the population of Y values
+
+In regression, we make no assumptions about X: it may be non-normal or fixed by the experimenter.
+
+Outliers can really change the slope, particularly when they're at the extremes of the range of X. A residual plot can be used to see if residuals are different across the range (more on this later). R will show the value of the residuals across five quantiles so that you can inspect it, at least.
+
+<br>
+
+## Plotting data and finding the linear equation
+
+Here is a [dataset of lung capacities](https://canvas.instructure.com/courses/1211882/files/57745658/download?wrap=1) the document of my students that I have been accumulating since 2006. We suspect that there is a relationship between each person's height and their vital capacity. Let's plot it and do the linear model:
+
+```{r}
+# Bring in the data
+
+vc <- read.csv(url("https://raw.githubusercontent.com/nmccurtin/CSVfilesbiostats/master/vc%20(1).csv"))
+
+plot(vc ~ height, data = vc, col = "firebrick", bty = "l", xlab = "Height (in.)", ylab = "Vital capacity (mL)", xlim = c(58, 76), ylim = c(1500, 6500))
+```
+
+That's fine if we had a single grouping variable. Want to show the difference between the outcomes for women and men? First plot one group with <span style="color:red">`plot()`</span> and the others using <span style="color:red"`points()`</span>. Some notes:
+
+- The double equal signs below indicate *identity* to pick your groups. 
+- <span style="color:red">`bty = "l"`</span> indicates that you want the box around the plot to be an L shape.
+- For choosing plotting characters, <span style="color:red">`pch = 1`</span> is for an open circle and <span style="color:red">`pch = 0`</span> yields an open square. See the help in R under <span style="color:red">`pch`</span> for your options.
+
+```{r}
+plot(vc[sex=="female"] ~ height[sex=="female"], data = vc, pch = 1, col = "yellow3", bty = "l", xlab = "Height (in.)", ylab = "Vital capacity (mL)", xlim = c(58, 76), ylim = c(1500, 6500))
+
+points(vc[sex=="male"] ~ height[sex=="male"], data = vc, pch = 0, col = "blue")
+```
+
+<br>
+
+Okay, so let's do the linear model. For this we'll make a new object and then get the reporting about it.
+
+```{r}
+# the linear model, in the form lm(Y ~ X)
+
+vcRegression <- lm(vc ~ height, data = vc)
+
+
+# call for the reporting about the regression/LM
+
+summary(vcRegression)
+```
+
+<br>
+
+## Testing hypotheses about the slope and intercept
+
+There is a lot of reporting here; let's break it down. (I used [this website](https://feliperego.github.io/blog/2015/10/23/Interpreting-Model-Output-In-R)) as a basis for this section.)
+
+<br>
+
+<span style="color:blue">Formula Call</span>
+
+The first item shown in the output is the formula R used to fit the data. R nerds call this the "call."
+
+<span style="color:blue">Residuals</span>
+
+Remember from the reading that residuals are the difference between the observed response values and the response values that the model predicted. The Residuals section of the model output breaks it down into 5 summary points. When assessing how well the model fit the data, look for a symmetrical distribution across these points on the mean value zero (0). Our data set are reasonably symmetrical through each quantile, at least by eye. It goes from negative to positive, but that's okay—we expect that the point ($\overline{X},\overline{Y}$) should have a residual close to 0 while we have negative residuals for smaller values of X and positive residuals for larger values of X.
+
+<span style="color:blue">Coefficients</span>
+
+The next section in the model output talks about the coefficients of the model. Theoretically, in simple linear regression, the coefficients are two unknown constants that represent the intercept and slope terms in the linear model. For our data, (Intercept) represents the Y-intercept (a) of our best-fit line and height represents the slope (b). The t value shows how far each value is from 0 (a is ~11 SD below 0 and b is ~16 SD higher). The P-values for those two statistics max out R's P-value calculator. In particular, we want the significance of the slope: in order for the relationship to be meaningful, the slope needs to be sufficiently greater (or less) than 0.
+
+Here, we're seeing a strongly positive slope, showing that taller people have a larger vital capacity than shorter people. Really this means that taller people have a chest cage with a larger volume, and *that* yields the larger VC.
+
+**What would a non-significant result mean?** Imagine instead that we were comparing height with the number of feet my students had. Regardless of their height, all students had two feet, so the slope would be 0, indicating a non-significant (or non-causal) relationship between height and number of feet. 
+
+<span style="color:blue">Multiple R-squared, Adjusted R-squared</span>
+
+The $R^2$ (R2) statistic provides a measure of how well the model is fitting the actual data. It takes the form of a proportion of variance. R2 is a measure of the linear relationship between our predictor variable (height) and our response / target variable (vc). It always lies between 0 and 1 (i.e.: a number near 0 represents a regression that does not explain the variance in the response variable well and a number close to 1 does explain the observed variance in the response variable). In our example, the R2 we get is 0.5152, or roughly 52% of the variance found in the response variable (vc) can be explained by the predictor variable (height). This might lead you to believe that there might be other variables that would also affect VC. It's hard to say what the exact cutoff is, though. That will probably depend on the application. 
+
+A side note: In multiple regression settings, the R2 will always increase as more variables are included in the model. That’s why the adjusted R2 is the preferred measure as it adjusts for the number of variables considered.
+
+<span style="color:blue">F-Statistic</span>
+
+The *F*-statistic is a good indicator of whether there is a relationship between our predictor and the response variables. The further the *F* is from 1 the better it is. However, how much larger the *F* needs to be depends on both the number of data points and the number of predictors. Generally, when the number of data points is large, an *F* that is only a little bit larger than 1 is already sufficient to reject the null hypothesis ($H_0$: There is no relationship between height and vc). The reverse is true as if the number of data points is small, a large *F* is required to be able to ascertain that there may be a relationship between predictor and response variables. In our example the *F*-statistic is 265.65 which is relatively larger than 1 given the size of our sample.
+
+</blockquote>
+
+<br>
+
+You have the basic result from this function, but to see the full ANOVA table, do this:
+
+```{r}
+anova(vcRegression)
+```
+
+<br>
+
+This will give you the confidence interval for each statistic:
+
+```{r}
+confint(vcRegression)
+```
+
+<br>
+
+After you have made the regression object, you can plot the least-squares line on top of the current scatterplot using this function. You might need to re-draw the plot before doing that.
+
+```
+abline(vcRegression)
+```
+
+
+<br>
+
+<img src="https://github.com/nmccurtin/biostatsimages/blob/master/vc-abline.jpeg?raw=true">
+
+<br>
+
+<span style="color:red">A caution: **it's always a bad idea to extrapolate beyond your observed data**.</span> The relationship we recovered here works well to describe people with adult-proportioned bodies, but the same equation is not likely to be true for, say, infants or young children. If you want to make a plot that only goes the range of your observed data, use this workflow to predict the value of Y (that is, $\overline{Y_i}$) and then connect with a line. Redraw your plot and then the <span style="color:red">`lines()`</span> function will map over it.
+
+```
+xpts <- range(vc$height)
+
+ypts <- predict(vcRegression, data.frame(height = xpts))
+
+lines(ypts ~ xpts, lwd = 1.5)
+```
+
+<br>
+
+<img src="https://github.com/nmccurtin/biostatsimages/blob/master/vc-classyab.jpeg?raw=true">
+
+This is a little subtle, but it gives you more control in plotting.
+
+<br>
+
+## Plotting the confidence interval bands for the slope
+
+So this slope could be as high as 176 or as low as 138 and still be significant. We show this graphically by making the confidence bands:
+
+```
+xpt <- seq(min(vc$height), max(vc$height), length.out = 100)
+
+ypt <- data.frame(predict(vcRegression, newdata = data.frame(height = xpt), interval = "confidence"))  ## calculates the upper/lower CI limits of the slope for each X
+
+lines(ypt$lwr ~ xpt, lwd = 1.5, lty = 2)
+
+lines(ypt$upr ~ xpt, lwd = 1.5, lty = 2)
+```
+
+<br>
+
+<img src="https://github.com/nmccurtin/biostatsimages/blob/master/vc-confbands.jpeg?raw=true">
+
+<br>
+
+These confidence bands are very close to the least-squares line. That's good, and expected, because the *P*- value on the significance tests were so high. Notice that they're closer at point ($\overline{X},\overline{Y}$) than at the extremes of the range of X.
+
+<br>
+
+## 95% prediction intervals
+
+The confidence bands illustrate how high or low a slope could be, but we can also illustrate where the bounds are for the predictions at each point. Remember that the least-squares line connects the means of a normal distribution of Y for each value of X. These ranges will be farther out than the confidence bands for the slope. This uses the same workflow as the confidence bands except for one line:
+
+```
+xpt <- seq(min(vc$height), max(vc$height), length.out = 100)
+
+ypt <- data.frame(predict(vcRegression, newdata = data.frame(height = xpt), interval = "prediction"))  ## calculates the upper/lower CI limits for predictions of Y for each X
+
+lines(ypt$lwr ~ xpt, lwd = 1.5, lty = 2)
+
+lines(ypt$upr ~ xpt, lwd = 1.5, lty = 2)
+```
+
+<br>
+
+<img src="https://github.com/nmccurtin/BIOSTATFA2018/blob/master/idk.jpeg?raw=true">
+
+<br>
+
+## Prediction intervals for Y at a given X
+
+For each $X_i$, we can also get the **95% CI for the predicted Y at a given X**. Let's say that I want the prediction intervals for all the people in my sample who are 5' 6":
+
+```{r}
+newdata = data.frame(height = 66)
+predict(vcRegression, newdata, interval = "predict")
+```
+
+So the expected value is 3610.8 and the 95% prediction interval for this X is $2526.2 < \overline{Y} < 4695.4$
+
+<br>
+
+## Beware nonlinear data!
+
+Did you read section 17.6 in the text? <u>Read that again</u>. If plotting your data you find that they are visually nonlinear, **you must transform them to do linear regression**. There are "smoothing" techniques that are also helpful, but we'll stick with transformations of power curves and exponential curves.
+
+**Power curves** have the form $Y\:=aX^b$. Make them linear by **ln-transforming X and Y and then doing the  linear model on those transformed variables.**
+
+You can make a new column with the transformed data by using the form
+
+```
+vc$lnheight <- log(vc$height)
+```
+
+Exponential curves have the form $Y=ab^X$. Make them linear by **ln-transforming Y and then doing the  linear model on the transformed Y and X.**
+
+<br>
+
+I think that covers the basic stuff that I'll want you to do.
+
+<br>
+
+</div>
+</body>
+</html>

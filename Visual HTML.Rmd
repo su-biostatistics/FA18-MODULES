@@ -1,0 +1,122 @@
+---
+title: "Sending meaningful visual messages in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<div class="list">
+
+<br>
+
+Graphics like tables and figures are an important aspect of communicating information because primates are highly visual animals. Well-designed graphics make it easier for us to us to communicate the "sense" of data far better than sentences or tables alone.
+
+There are rules for making successful graphics. Some of these are best practices that make good use of the abilities our eyes and brain has, but others are conventions depending on the kind of data that we are describing.
+
+<br>
+
+## Some ground rules: types of data
+
+First of all, <u>know that the word "data" is a plural word</u>. The singular form is "datum," meaning one data point. Your data come in a few different varieties or levels:
+
+<center><br>
+
+**Type of data** | **Level**	| **Example**
+------------|-----------------------|--------------
+**Categorical**|**Nominal**—names only<br>**Ordinal**—there is a magnitude difference, but not a numerical one|names of species<br>small/medium/large
+**Numerical**	|**Interval**—measured on a scale with equal units, but without a 0 on the scale<br>**Ratio**—measurable on a scale with a 0|temperature<br>weight, counts, length, etc.
+
+<br></center>
+
+Additionally, numerical data can either be **discrete** (whole numbers only) or **continuous** (can be any real number).
+
+The table above describes the levels of data *from low to high*—meaning that as you go down the rows, the data have more inherent information in them. It's aways possible to "downshift" data from a higher level to a lower one. For example, you could weigh beetles using a scale (ratio level) but later call them "small or large" (ordinal level). You'd lose some information, but you' be justified in your conclusions.
+
+However, you can't go the *other* way, so that you're "inventing" information. If I think of my students as "tall vs. short," I can't later proclaim that all "tall" students are 72 in. tall while all "short" students are 48 in. tall. That would "invent" information, and that is unjustified.
+
+So, best practice when you're collecting your own data is to always try to gather them at as high a level as possible. 
+
+<br>
+
+## Levels of data and graphics
+
+Why talk about this now? Because the graphics that you make send a message to your viewer about the kind of data that you observed. This video describes different kinds of graphics appropriate for various types of data. Some take-home messages:
+
+- When **describing frequency distributions** of samples, categorial data are described with bar charts but continuous data should be shown with histograms.
+- **Relationships between two numerical variables** are best shown by a scatterplot (regular XY), line graph (if a trend is shown over time), or a map (for trends with space or geographic area). 
+- **Relationships between two categorical variables** could be shown with a grouped bar chart or a mosaic plot (which has the advantage of expressing the difference in sample size and proportion).
+- **Relationships between one numerical and one categorical variable** are described well by strip charts, box plot (also called box-and-whisker plots), multiple (stacked) histograms, or a cumulative frequency distribution.  
+
+<br>
+
+</div>
+</body>
+</html>

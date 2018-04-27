@@ -1,0 +1,132 @@
+---
+title: "Estimating with uncertainty"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<div class="list">
+
+
+<br>
+
+## Samples and Populatons
+
+Remember that when we make observations, we are really sampling from a larger total population of interest. For example, if I want to know the period of gestation in Carolina gray squirrels, then I'd go out and make observations of a bunch of pregnant individuals and analyze those data. This would be a sample of the larger population of all Carolina tree squirrels. **Most times it is simply not possible to sample all the members of your population of interest.** 
+
+But that's okay—*this is what we have statistics for.* **Statistics allows us to sample from a whole population to try to reach a conclusion that is generalizable to all members of that population.** Stats also lets us quantify our level of confidence (or uncertainty) that we have in our conclusions.
+
+As shown in the last module and chapter, we calculate sample statistics based on the observations that we make. These sample statistics are *estimates of population parameters*, the "true" values if we were able to observe all the members of a population of interest:
+
+- the sample mean $\bar{Y}$ is an estimate of the population mean $\mu$ 
+- the sample standard deviation s is an estimate of the population standard deviation $\sigma$
+- the sample proportion $\hat{p}$ is an estimate of the population proportion *p*
+
+<br>
+
+## The sampling distribution of an estimate
+
+Even if with random sampling, we would not expect to get the same sample mean each time. The sampling distribution of an estimate is a probability distribution of all the values for an estimate that we might expect to obtain after repeated sampling from a population.
+
+Consider the A&P exam data from before. The population of all scores is shown, and from that we calculated the population mean (74.4) and the population SD (11.4). I sampled this population five times with a sample size of 5, 10, and higher sample sizes. The estimates of the mean and SD were variable, but generally became closer to the "truth" as my sample size got closer to the total population size.
+
+<img src="https://github.com/nmccurtin/biostatsimages/blob/master/4lec.jpg?raw=true">
+
+This is a tendency of sampling: all things considered, **higher *n* results in more accurate estimates**. We will encounter differences from the "truth" by chance depending on how variable our actual data are.
+
+<br>
+
+## The sampling distribution of $\hat{Y}$
+
+So, different samples will yield different estimates of the same parameter. The sampling distribution is that set (or "population") of possible values we might get for $\hat{Y}$ with repeated sampling. One sample yields one estimate of $\hat{Y}$ from this overall sampling distribution. Repeated samples give a sampling distribution that is centered on $\mu$. As shown above, the spread of the sampling distribution depends on the sample size, and a higher sample size gives a narrower, more precise estimate of $\mu$.
+
+<br>
+
+## Measuring the uncertainty of an estimate
+
+The standard error (SE) is the standard deviation (dispersion) of an estimate's sampling distribution. A smaller SE means a more precise estimate. On paper the standard error is $SE_{\bar{Y}}  = \frac{s}{\sqrt{n}}$ , where s is the sample standard deviation and n is the sample size.
+
+Calculating the standard error is pretty easy in R but takes a few steps. It's just
+
+```sd(x) / sqrt(n)```
+
+In that, x is an object that's the sample from your population. 
+
+<br>
+
+## Confidence Intervals
+
+The CI is a range of numbers that an estimate is likely to contain around the parameter. We can specify how "wide" we want this range to be. For example, the 95% CI for the mean gives the range of sample estimates we'd get from repeated observations. The 95% CI is approximated by $\bar{Y}\pm 2SE$ on a hand calculator, but it's actually a little tiresome to calculate by itself in R, so we'll wait to roll it out until we get to the normal distribution and t tests later in the semester.
+
+<br>
+
+</div>
+</body>
+</html>

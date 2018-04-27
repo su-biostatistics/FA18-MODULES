@@ -1,0 +1,224 @@
+---
+title: "The normal distribution in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<div class="list">
+
+<br>
+
+
+When we collect enough ratio-scale data, we often see that our sample's frequencies are distributed normally. 
+
+The normal distribution (ND) is special because has universal properties. Not every "bell-shaped" curve is an ND, but the ones that do have these in common that allow us to do statistical tests with them:
+
+1. The ND is defined by $\mu$  and $\sigma$ (or $\overline{Y}$  and $s$ for samples).
+2. The height of the curve is a probability density function, but statisticians have used calculus (or the calculus) to integrate the area under the curve from some observation Yi to another observation—knowing this area allows us to assign a probability to the range, and that we can use to inform statistical tests.
+3. It is perfectly symmetrical about its height, which is also the mean, median, and mode of the distribution.
+4. It has known proportions:
+    + ± 1 SD = ~66% of the area under the curve
+    + ± 1.96 SD = 95% of the area under the curve
+    + ± 3 SD = ~99% of the area under the curve
+    + The total area under the curve is 100% or 1.0
+    
+<br>
+  
+## The *Z* score (standard normal deviate)
+
+When both  $\mu$  and $\sigma$  of the population is known, we can use this score to predict the placement of a given observation in relation to the mean. The equation is 
+
+<br>
+
+<center>$Z  =\frac{Y_{i}-\mu}{\sigma}$</center>
+
+<br>
+
+Where $Y_i$ is a given observation, $\mu$ is the population mean, and $\sigma$ is the population standard deviation. The $Z$-score gives the placement of your observed $Y_i$ along the X axis. From there we can calculate the area from there under the curve.
+
+First, let's get a sample from a normal distribution with $\bar{Y}=100$ and $\sigma = 5$:
+
+<br>
+
+```{r}
+# sample 10,000 numbers from a population with a mean of 100 and an SD of 5
+mydata <- rnorm(n=10000, mean=100, sd=5)
+
+# some sample statistics; they probably won't be exact because this is a sample
+mean(mydata)
+sd(mydata)
+
+# Make a histogram of your sample
+hist(mydata, main ="", col = "goldenrod1", xlim = c(80, 120), freq = FALSE,
+ xlab = "")
+## freq = FALSE will give the density function; leaving out that argument
+## will make the Y-axis frequency rather than probability density
+
+# ...and add a density curve
+curve(dnorm(x, mean=mean(mydata), sd=sd(mydata)), add=TRUE, 
+ col="darkblue", lwd=3)
+## The argument add = TRUE overlays the curve on your existing histogram
+## lwd=3 specifies the width of the line
+```
+
+
+This gives us the plot:
+
+<br>
+
+Imagine that this sample came from observations of the weights of newborn cats. If a kitten named Alice weighed exactly 100 g, then 
+
+$Z\:=\frac{100-100}{5}=0$
+
+The $Z$-score is 0. Look up the $Z$ table (Statistical Table B) in the back of WS2e. When $Z$ = 0.00, then we get a result of 0.5. That means that 50% of the area under the curve is to the right of Alice's weight because she's right at $\mu$ . <sub>(Get it? She's a cat.)</sub>
+
+In R, we'd calculate this with:
+
+```{r}
+1 - pnorm(100, mean = 100, sd = 5)
+```
+
+We weigh another cat, Bernie, who weighs 105.6 g, so
+
+$Z\:=\:\frac{105.6-100}{5}=1.12$
+
+On the table, we see that when $Z$ = 1.12, 0.13136 (~13%) of the curve lies to the right. We can interpret that to mean that Bernie is bigger than (50 + 13) = 63% of other newborn kittens.
+
+In R, we'd calculate this with: 
+
+```{r}
+1 - pnorm(105.6, mean = 100, sd = 5)
+```
+
+But what about Casey, a kitten born at 97.3 g? Her place along the distribution is
+
+```{r}
+pnorm(97.3, mean = 100, sd = 5)
+```
+
+So, 29% of the population would be larger than her. 
+
+**By now you've noticed that The *Z*-score is an intermediary between the raw observation and its place along the distribution. In R you skip that step by going right to the *P*-value of that observation. The table in the book gives you the area to the right of that point on the curve. <span style="color:orange>But R does the opposite: it gives the area to the left.</span>** 
+
+In practice, this means:
+
+```
+pnorm() gives the proportion under the curve smaller the observation
+
+1 - pnorm() gives the proportion under the curve larger the observation
+```
+
+<br>
+
+One last use of this is not just the placement of individual points along the curve, but the space between two observations on the curve. What percentage of cats would be expected to be between Casey and Bernie?
+
+Graphically this is:
+
+<img src="https://github.com/nmccurtin/biostatsimages/blob/master/Rplot15a.jpeg?raw=true">
+
+So we're comparing Casey (at the ~30th percentile) with Bernie (at the ~87th percentile). In R this is 
+
+```{r}
+pnorm(97.3, mean = 100, sd = 5) + 1 - pnorm(105.6, mean = 100, sd = 5)
+```
+
+So 42.6% of kittens should be between Casey and Bernie in birth weight.
+
+<br>
+
+## Testing hypotheses with the *Z* score
+
+The $Z$ score gives us probabilities of outcomes. Once we get to the tails of the distribution, the probabilities start to drop off fast.
+
+Consider the cats from above and imagine that we had one big cat (Dario) whose birth weight was 115.6 g. Is Dario significantly larger than the rest of the kittens from this population? This is a one-tailed test because I think that he's bigger than other kittens, not just "different" in size. Let's set our significance level at 0.01.
+
+$H_0$: Dario is smaller or equal in birth weight to other kittens ($Y_i\le100$).
+
+$H_a$: Dario is larger than these other kittens ($Y_i>100$).
+
+```{r}
+1 - pnorm(115.6, mean = 100, sd = 5)
+```
+
+Yikes. The probability of getting a kitten this large when the mean weight is 100 g with a standard deviation of 5 g is *P* = 0.0009. This is much less than our confidence level of 0.01, so we can say, no, this cat would be not a part of the reference population. Maybe it's some bigger cat like a lynx or a leopard or something, but it's really unusual for a member of the population we've been referring to. Furthermore, we'd expect to be wrong in our conclusion far less than 1% of the time because *P* = 0.0009.
+
+<br>
+
+## Conclusion
+
+The *Z* test is a very powerful test for ratio-level data when we have a lot of parametric knowledge (i.e., both the parametric mean and SD). However, in practice we usually *don't* know everything about our reference population (particularly the SD). Luckily, we have another test (the *t* test) that can help us in those situations.
+
+<br>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,138 @@
+---
+title: "Why do we need statistics?"
+author: " "
+date: " "
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<div class="list">
+<br>
+
+
+
+I don't fight what's natural. I quoted Stephen Jay Gould above because it reminds me about some of the things that our brains are good at: they are natural pattern-seekers. This is why humans are able to recognize faces but also see shapes in the clouds. We are drawn to novelty and confirmation and we like drawing conclusions.
+
+One thing our brains are NOT good at is identifying randomness. We need stats to be sure that we're not kidding ourselves when we try to interpret our observations of the natural world.
+
+<br>
+
+## Consider an example
+
+```
+I flipped a quarter 20 times and got this outcome: 1 0 1 0 0 1 1 0 0 1 1 1 0 1 0 0 1 0 1 0 (10 heads/10 tails)
+```
+
+```
+another gave me this result: 1 0 1 1 0 1 1 0 0 1 0 0 0 1 1 1 1 0 1 1 (8 heads/12 tails)
+```
+
+```
+and another: 0 0 1 1 0 1 0 0 1 0 0 0 0 0 1 0 0 1 0 1 (13 heads/7 tails)
+```
+
+<br>
+
+<span style="color:orange">**Do any of these look like it came from a fair (unbiased) coin?** Think about it for a minute.</span>
+
+I made up the first one. The second two, the ones with "streaks" of 4 or 5 heads in a row, were made by a random number generator in R. People will tend to choose the first as being the "most" random because heads and tails alternate a lot and end up with a proportion close to 1/2 overall.
+
+<br>
+
+## We fool ourselves all the time
+
+We see a similar pattern when we interpret "streaks" of wins and losses in baseball. These numbers are based on the record of the Boston Red Sox from July 14-August 29, 2017:
+
+
+```
+W L L W L W W L W L L L L W L W L W W W (10 Wins/ 10 Losses)
+```
+
+```
+W W W W L W W L W W L W L W W L L L L W (12 Wins/ 8 Losses)
+```
+
+
+When I bin them into groups of 20, they don't look very different from my random coins above. But how do we read into the "stories" that these streaks tell?
+
+On July 25th, after that streak of four losses in the first sequence, a headline on ESPN.com read, *Dustin Pedroia makes case that Red Sox don't have leadership void.*
+
+On the other hand, the day after the 7-game streak of wins (Aug. 9th), WEEI.com had the headline, *How the Red Sox turned things around.*
+
+**But what if these outcomes *are random?* ** We would expect what we saw in these samples (between 10 and 12 wins) about 46% of the time. Over the course of a typical season, we would expect 12 wins in 20 about 12% of the time alone!
+
+**Remember that we are pattern-seekers and storytellers.** We need statistics to save ourselves from this.
+
+<br>
+
+</div>
+</body>
+</html>

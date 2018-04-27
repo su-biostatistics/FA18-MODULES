@@ -1,0 +1,236 @@
+---
+title: "The very basics of using R Studio"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}
+
+h3 {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list {
+  font-family: 'Lato', sans-serif;
+}
+
+.list2 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list3 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list4 {
+  font-family: 'Lato', sans-serif;
+}
+
+.list5 {
+  font-family: 'Lato', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<div class="list">
+
+
+<br>
+
+## RStudio is a programming environment
+
+Therefore, the basics of the language must be understood. This document references a [beginner's guide](https://cran.r-project.org/doc/contrib/Paradis-rdebuts_en.pdf) published by Emmanuel Paradis in a much more accessible summary as well as [this RStudio resource](http://www.r-tutor.com/) and the [Torfs guidebook](https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf). The [WS2e website](http://whitlockschluter.zoology.ubc.ca/r-code) also has helpful R codes, but their explanation is not quite as in depth as these other resources.
+
+<br>
+
+#### Types of data
+
+The types of data possible to input in R are numeric, character, and logical values.
+
+- A numeric value is such like 20.
+- A character value is such like the letter C.
+- A logical value is such like TRUE, FALSE.
+
+The type of data determines the relationships between objects in RStudio. An object is any value that you assign a name to in RStudio.
+
+<br>
+
+#### Types of relationships
+
+Data can be considered as matrices and data frames. Matrices are collections of data of the same data type, while data frames are collections of data with different data types. For example, you can create a matrix of numeric values against numeric values whereas you can make a data frame with character values against numerical values. The scope of this module is mostly using data frames and vectors to analyze data in RStudio.
+
+<br>
+
+## Loading data
+
+The types of file we use in R to analyze datasets is known as "comma-separated values" with an extension of .csv. CSV files are not typical to beginners of data analysis and computation; however, you will become quite familiar with these files throughout the scope of the course. Opening these files in Microsoft Excel or your browser is highly depressing and not all that interesting, while opening them in RStudio improves the amount of things you can do with these files.
+
+There are two simple ways to load data in RStudio. In the "Environment" tab, there is a small opened file button, in which you can directly load a dataset into RStudio from a file saved onto your computer. Alternatively, you can use a command to load a file into RStudio from a hyper link, such as the files loaded onto the [WS2e website](http://whitlockschluter.zoology.ubc.ca/data). This code displays exactly what you need to do.
+
+```{r}
+## First, right-click on the dataset you want to load and choose "Copy link address"
+
+## Make sure to name your data something easy to use and access. Use the following argument to load from a hyperlink.
+
+cannibalspiders <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter07/chap07q08GardenSpiderCannibalism.csv"))
+
+```
+
+The `url("")` **including the quotations** is an essential part of this argument; otherwise, you would not be able to load the files through a hyperlink. 
+
+<br>
+
+#### Creating an object
+
+The object can be named anything you please. Sometimes it is very simple to name an object as something very small like "n" or "x", but if you are very specific about what you want to name your object, it can be as long as you want.
+
+For example, let's consider the following objects.
+
+```{r}
+object <- 2
+
+n <- 2
+
+## These are both separate objects with the same value, but they both have very different object names. That is fine.
+```
+
+Objects can also include R code and equations. Let's consider these objects.
+
+```{r}
+n <- 2*3
+n
+
+c <- 1 + dbinom(3, size = 5, prob = 0.8)
+```
+
+<br>
+
+#### Creating a vector
+
+A vector can join multiple objects. This is done with the following function
+
+```{r}
+## simple vector (vector a)
+a <- c(1,2,3)
+
+## integer sequence
+b <- c(1:10)
+
+## complex sequence (I'm annoying)
+
+c <- c(seq(1, 10, by=0.05))
+
+## Let's see what we got!
+
+show(a)
+
+show(b)
+
+show(c)
+```
+
+Using vectors is an important skill for joining data so that it can be used. These values are stored in the "Environment" tab in Rstudio under the "Values" header.
+
+<br>
+
+#### Things you can do with vectors
+
+```{r}
+## You can take summary statistics of a numeric vector
+mean(c)
+sd(c)
+median(c)
+
+## You can plot vectors against each other
+d <- c(1:5)
+
+e <- c(2, 3, 4, 3, 2)
+
+plot(d~e)
+
+## You can transform a vector
+log(b)
+
+#### Note: the argument log() is a natural log. log10() is the common logarithm
+
+```
+
+<br>
+
+#### Creating a data frame
+
+The RStudio website describes data frames as a "a list where all elements are the same length". When two objects correspond to each other in their combined vectors (think of like an x, y relationship as a function of a graph), then you can display these objects as a data frame.
+
+```{r}
+## Let's create the data frame.
+
+framename <- data.frame(label1=c(6,10,12), label2=c(category1=6, category2=10, category3=12))
+
+## The first vector, label1, is numeric values, while the second vector, label2, is categorical (character) values. Using the data.frame command, we can use this mix of data in RStudio.
+
+```
+
+<br>
+
+#### Categorical values
+
+Categorical values can be stored as factors in RStudio. Technically, categorical values are considered to be character values and require quotation marks around their input. Here is an example of creating factors in R to store categorical values.
+
+```{r}
+## We must first create the vector of categorical values.
+
+treatments <- c("Sham", "Positive Control", "Negative Control", "Experimental", "Experimental", "Sham", "Experimental", "Negative Control")
+
+## Now we can look at the factors, which will describe the levels!
+
+factor(treatments)
+
+```
+
+**Levels** are the different categories in a factor.
+
+<br>
+
+</div>
+</body>
+</html>
